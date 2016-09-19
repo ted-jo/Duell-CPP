@@ -8,7 +8,8 @@ public:
 	~Die();
 	vector<int> frontalMove(vector<int>, int, bool);
 	vector<int> createStartingDie(int, int);
-	int lateralMove(int, int, int, bool);
+	vector<int> lateralMove(vector<int>, int, bool);
+	string displayDie(vector<int>);
 private:
 	vector<int> die;
 	bool keyPiece;

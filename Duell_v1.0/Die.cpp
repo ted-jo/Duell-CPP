@@ -1,4 +1,5 @@
 #include "Die.h"
+#include "stdafx.h"
 
 
 
@@ -44,7 +45,23 @@ vector<int> Die::createStartingDie(int topNum, int rightNum)
 	die[2] = 7 - rightNum;
 	die[3] = rightNum;
 	die[4] = 4;
-	die[5] = 6;
+	die[5] = 3;
 
 	return die;
+}
+
+string Die::displayDie(vector<int> die)
+{
+	int top, right;
+	string sTop, sRight;
+	top = die[0];
+	right = die[3];
+
+	sTop = to_string(top);
+	sRight = to_string(right);
+	
+
+
+
+	return sTop + sRight;
 }
