@@ -1,14 +1,16 @@
+#include "stdafx.h"
 #pragma once
+
 class Die
 {
 public:
-	Die();
+	Die() : die(6) {};
 	~Die();
-	int frontalMove(int, int, bool);
-	int lateralMove(int, int, bool);
+	vector<int> frontalMove(vector<int>, int, bool);
+	vector<int> createStartingDie(int, int);
+	int lateralMove(int, int, int, bool);
 private:
-	int topSide;
-	int rightSide;
+	vector<int> die;
 	bool keyPiece;
 };
 
