@@ -1,15 +1,15 @@
 #pragma once
 #include "stdafx.h"
+#include "Die.h"
 
 class Board
 {
 public:
-	Board() : gameboard(8, vector <string>(9)) {}
+	Board();
 	~Board();
 	void MovePiece();
-	void ResetBoard(vector< vector<string> > & gameboard);
-	vector< vector<string> > & GetBoard() { return gameboard; };
+	vector< vector<Die> > & GetBoard() { return gameboard; };
 private:
-	vector< vector<string> > gameboard;
+	vector< vector<Die> > gameboard;
 };
 

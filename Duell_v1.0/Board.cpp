@@ -5,6 +5,11 @@
 
 
 
+Board::Board()
+{
+	
+}
+
 Board::~Board()
 {
 }
