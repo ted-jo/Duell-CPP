@@ -2,12 +2,6 @@
 #include "stdafx.h"
 
 
-
-Die::Die()
-{
-}
-
-
 Die::~Die()
 {
 }
@@ -15,15 +9,17 @@ Die::~Die()
 // Move forward by one space
 // Die[top, bottom, left, right, front, back]
 // newDie[back, front,left, right, top, bottom]
-vector<int> Die::frontalMove(vector<int> die)
+Die* Die::frontalMove(Die *d)
 {
-	vector<int> newDie;
-		newDie[0] = die[5];
-		newDie[1] = die[4];
-		newDie[2] = die[2];
-		newDie[3] = die[3];
-		newDie[4] = die[0];
-		newDie[5] = die[1];
+	Die * newDie = new Die();
+		
+		newDie->die[0] = d->die[5];
+		newDie->die[1] = d->die[4];
+		newDie->die[2] = d->die[2];
+		newDie->die[3] = d->die[3];
+		newDie->die[4] = d->die[0];
+		newDie->die[5] = d->die[1];
+		newDie->player = d->player;
 
 		return newDie;
 	
@@ -49,7 +45,7 @@ vector<int> Die::lateralRightMove(vector<int> die)
 // Move Left One Space
 // Die[top, bottom, left, right, front, back]
 // newDie[right, left, top, bottom, front, back]
-vector<int> Die::lateralRightMove(vector<int> die)
+vector<int> Die::lateralLeftMove(vector<int> die)
 {
 	vector<int> newDie;
 
@@ -65,22 +61,21 @@ vector<int> Die::lateralRightMove(vector<int> die)
 
 // Create starting die based off given top number
 // Die[top, bottom, left, right, front, back]
-vector<int> Die::createStartingDie(int topNum, int rightNum)
+Die* Die::createStartingDie(Die * d, int topNum, int rightNum, string player)
 {
-	vector<int> die;
+	d->die[0] = topNum;
+	d->die[1] = 7 - topNum;
+	d->die[2] = 7 - rightNum;
+	d->die[3] = rightNum;
+	d->die[4] = 4;
+	d->die[5] = 3;
+	d->player = player;
 
-	die[0] = topNum;
-	die[1] = 7 - topNum;
-	die[2] = 7 - rightNum;
-	die[3] = rightNum;
-	die[4] = 4;
-	die[5] = 3;
-
-	return die;
+	return d;
 }
 
 
-string Die::displayDie(vector<int> die, string player)
+string Die::displayDie()
 {
 	int top, right;
 	string sTop, sRight;

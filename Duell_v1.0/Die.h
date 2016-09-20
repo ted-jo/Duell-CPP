@@ -4,13 +4,15 @@
 class Die
 {
 public:
-	Die() : die(6) {};
+	Die() : die(6) {}
 	~Die();
-	vector<int> frontalMove(vector<int>);
-	vector<int> createStartingDie(int, int);
+	Die* frontalMove(Die *);
+	Die* createStartingDie(Die *, int, int, string);
 	vector<int> lateralRightMove(vector<int>);
-	string displayDie(vector<int>, string);
+	vector<int> lateralLeftMove(vector<int>);
+	string displayDie();
 private:
 	vector<int> die;
+	string player;
 };
 

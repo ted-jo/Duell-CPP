@@ -7,7 +7,7 @@ class Board
 public:
 	Board();
 	~Board();
-	void MovePiece();
+	vector<vector<Die>> movePiece(int, int, vector<vector<Die>> &);
 	vector< vector<Die> > & GetBoard() { return gameboard; };
 private:
 	vector< vector<Die> > gameboard;

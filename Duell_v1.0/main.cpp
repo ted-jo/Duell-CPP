@@ -9,12 +9,23 @@
 
 int main(int argc, char *argv[])
 {
+	// *** Temp
+	int x, y;
+	// *** Temp
 	Board b;
 	boardView v;
-	vector<vector<string>> gameboard = b.GetBoard();
+	vector<vector<Die>> gameboard = b.GetBoard();
 	cout << "Start Game" << endl << endl;
-	b.ResetBoard(gameboard);
 	v.ViewBoard(gameboard);
+	cout << "Choose X Coordinate of Die to move: ";
+	cin >> x;
+	cout << "Choose Y Coordinate of Die to move: ";
+	cin >> y;
+	gameboard = b.movePiece(x, y, gameboard);
+	v.ViewBoard(gameboard);
+
+
+	
 
 
 

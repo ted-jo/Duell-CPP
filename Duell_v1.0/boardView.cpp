@@ -11,7 +11,7 @@ boardView::~boardView()
 {
 }
 
-void boardView::ViewBoard(vector<vector<string>>& gameboard)
+void boardView::ViewBoard(vector<vector<Die>>& gameboard)
 {
 	int rowIndex = 8; // Index for y coordinates
 	cout << "    ";
@@ -30,13 +30,13 @@ void boardView::ViewBoard(vector<vector<string>>& gameboard)
 		for (int j = 0; j < gameboard[i].size(); j++)
 		{
 			 // If the vector element is empty print empty square
-			if (gameboard[i][j].empty())
+			if (gameboard[i][j].displayDie() == "00")
 			{
 				cout << "|   ";
 			}
 			else
 			{
-				cout << "|"  << gameboard[i][j];
+				cout << "|"  << gameboard[i][j].displayDie();
 			}
 			
 		}

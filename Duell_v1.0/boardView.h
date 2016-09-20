@@ -6,6 +6,6 @@ class boardView
 public:
 	boardView();
 	~boardView();
-	void ViewBoard(vector <vector<string> > & gameboard);
+	void ViewBoard(vector <vector<Die> > & gameboard);
 };
 
