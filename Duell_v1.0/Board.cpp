@@ -65,24 +65,22 @@ void Board::setBoard(vector<vector<Die>> board)
 	gameboard = board;
 }
 
-void Board::movePieceDown(int x, int y, vector<vector<Die>> &gameboard)
+void Board::movePieceDown(int x, int y)
 {
-	// TODO: Change name to downward move, only allow movement if space has an active Die, Change to void and set gameboard instead of return?
-	// TODO: OUT OF BOUNDS CHECKING!!!
-	int newXCoord = x;
+	// TODO: Only allow movement if space has an active Die, try using std:swap() instead of creating new objects...
+
+	// Sets the x, y index - 1 since vector starts at index 0
 	x--;
 	y--;
-	Die * newDie = &gameboard[x][y];
-	Die * replacementDie = new Die();
-	gameboard[newXCoord][y] = *gameboard[x][y].frontalMove(&gameboard[x][y]);
-	// Set prior position to a blank die
-	gameboard[x][y] = *replacementDie;
+
+	gameboard[y][x].frontalMove();
+	swap(gameboard[y][x], gameboard[y + 1][x]);
 
 	setBoard(gameboard);
 }
 
 // Function checks to make sure coordinates are not out of bounds
-bool Board::legalMove(int x, int y)
+bool Board::checkOOB(int x, int y)
 {
 	// Check if x or y coordinate is out of the 2D vector bounds on the upper end
 	if (x > 8 || y > 7)
@@ -96,6 +94,19 @@ bool Board::legalMove(int x, int y)
 	{
 		cout << endl << "Selected coordinates out of range" << endl;
 		cout << "Please select a new set of coordinates" << endl;
+		return false;
+	}
+
+	return true;
+}
+
+bool Board::occupiedSpace(int x, int y)
+{
+	if (gameboard[x][y].displayDie() == "00")
+	{
+		cout << endl << "No valid piece on given coordinates" << endl;
+		cout << "Please select a new set of coordinates" << endl;
+
 		return false;
 	}
 

@@ -6,23 +6,29 @@ Die::~Die()
 {
 }
 
+void Die::setDie(vector<int> newDie)
+{
+	die = newDie;
+}
+
 // Move forward by one space
 // Die[top, bottom, left, right, front, back]
 // newDie[back, front,left, right, top, bottom]
-Die* Die::frontalMove(Die *d)
+void Die::frontalMove()
 {
-	Die * newDie = new Die();
+	//Die * newDie = new Die();
+	vector<int> newDie (6, 0);
 		
-		newDie->die[0] = d->die[5];
-		newDie->die[1] = d->die[4];
-		newDie->die[2] = d->die[2];
-		newDie->die[3] = d->die[3];
-		newDie->die[4] = d->die[0];
-		newDie->die[5] = d->die[1];
-		newDie->player = d->player;
+		newDie[0] = die[5];
+		newDie[1] = die[4];
+		newDie[2] = die[2];
+		newDie[3] = die[3];
+		newDie[4] = die[0];
+		newDie[5] = die[1];
 
-		return newDie;
-	
+		setDie(newDie);
+
+			
 }
 
 // Move Right One Space

@@ -24,9 +24,9 @@ void Game::round()
 		cin >> x;
 		cout << "Choose Y Coordinate of Die to move: ";
 		cin >> y;
-	} while (!boardObj->legalMove(x, y));
+	} while (!boardObj->checkOOB(x, y));
 
-	boardObj->movePieceDown(x, y, boardObj->GetBoard());
+	boardObj->movePieceDown(x, y);
 	boardViewObj->ViewBoard(boardObj->GetBoard());
 
 
