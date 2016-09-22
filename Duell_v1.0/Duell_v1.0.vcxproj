@@ -149,12 +149,14 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="boardView.h" />
     <ClInclude Include="Die.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="boardView.cpp" />
     <ClCompile Include="Die.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>

@@ -66,7 +66,10 @@ vector<vector<Die>> Board::movePiece(int x, int y, vector<vector<Die>> &gameboar
 
 	int newXCoord = x + 1;
 	Die * newDie = &gameboard[x][y];
+	Die * replacementDie = new Die();
 	gameboard[newXCoord][y] = *gameboard[x][y].frontalMove(&gameboard[x][y]);
+	// Set prior position to a blank die
+	gameboard[x][y] = *replacementDie;
 
 	return gameboard;
 }
