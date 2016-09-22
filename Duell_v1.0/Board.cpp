@@ -67,7 +67,7 @@ void Board::setBoard(vector<vector<Die>> board)
 
 void Board::movePieceDown(int x, int y)
 {
-	// TODO: Only allow movement if space has an active Die, try using std:swap() instead of creating new objects...
+	// TODO: Only allow movement if space has an active Die
 
 	// Sets the x, y index - 1 since vector starts at index 0
 	x--;
@@ -83,7 +83,7 @@ void Board::movePieceDown(int x, int y)
 bool Board::checkOOB(int x, int y)
 {
 	// Check if x or y coordinate is out of the 2D vector bounds on the upper end
-	if (x > 8 || y > 7)
+	if (x > 8 || y > 9)
 	{
 		cout << endl << "Selected coordinates out of range" << endl;
 		cout << "Please select a new set of coordinates" << endl;
@@ -100,6 +100,7 @@ bool Board::checkOOB(int x, int y)
 	return true;
 }
 
+// TODO: implement this during coodinate entry.
 bool Board::occupiedSpace(int x, int y)
 {
 	if (gameboard[x][y].displayDie() == "00")
