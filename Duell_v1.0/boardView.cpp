@@ -14,6 +14,7 @@ boardView::~boardView()
 void boardView::ViewBoard(vector<vector<Die>>& gameboard)
 {
 	int rowIndex = 8; // Index for y coordinates
+	cout << endl << endl;
 	cout << "    ";
 	// Print x coordinates
 	for (int j = 1; j <= 9; j++)

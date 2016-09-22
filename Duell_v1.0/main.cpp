@@ -2,8 +2,7 @@
 * Driver for the game
 */
 #include "stdafx.h"     // Contains the pre-compiled headers.
-#include "Board.h"
-#include "boardView.h"
+#include "Game.h"
 #include <stdio.h>
 
 
@@ -50,8 +49,12 @@ int main(int argc, char *argv[])
 		switch (choice)
 		{
 		case 1 :
+		{
 			// Start a new game
+			Game * game = new Game();
+			game->startGame();
 			break;
+		}
 		case 2 :
 			// Start a new Tournament
 			break;

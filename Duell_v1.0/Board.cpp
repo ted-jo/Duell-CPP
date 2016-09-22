@@ -60,11 +60,18 @@ Board::~Board()
 {
 }
 
+void Board::setBoard(vector<vector<Die>> board)
+{
+	gameboard = board;
+}
 
 vector<vector<Die>> Board::movePiece(int x, int y, vector<vector<Die>> &gameboard)
 {
-
-	int newXCoord = x + 1;
+	// TODO: Change name to downward move, only allow movement if space has an active Die, Change to void and set gameboard instead of return?
+	// TODO: OUT OF BOUNDS CHECKING!!!
+	int newXCoord = x;
+	x--;
+	y--;
 	Die * newDie = &gameboard[x][y];
 	Die * replacementDie = new Die();
 	gameboard[newXCoord][y] = *gameboard[x][y].frontalMove(&gameboard[x][y]);
@@ -73,6 +80,8 @@ vector<vector<Die>> Board::movePiece(int x, int y, vector<vector<Die>> &gameboar
 
 	return gameboard;
 }
+
+
 
 
 

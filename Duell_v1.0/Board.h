@@ -9,6 +9,7 @@ public:
 	~Board();
 	vector<vector<Die>> movePiece(int, int, vector<vector<Die>> &);
 	vector< vector<Die> > & GetBoard() { return gameboard; };
+	void setBoard(vector<vector<Die>>);
 private:
 	vector< vector<Die> > gameboard;
 };
