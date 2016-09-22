@@ -18,12 +18,15 @@ void Game::round()
 	//*****Test Code
 	int x, y;
 	//****************
-	
-	cout << "Choose X Coordinate of Die to move: ";
-	cin >> x;
-	cout << "Choose Y Coordinate of Die to move: ";
-	cin >> y;
-	boardObj->setBoard(boardObj->movePiece(x, y, boardObj->GetBoard()));
+	do
+	{
+		cout << "Choose X Coordinate of Die to move: ";
+		cin >> x;
+		cout << "Choose Y Coordinate of Die to move: ";
+		cin >> y;
+	} while (!boardObj->legalMove(x, y));
+
+	boardObj->movePieceDown(x, y, boardObj->GetBoard());
 	boardViewObj->ViewBoard(boardObj->GetBoard());
 
 

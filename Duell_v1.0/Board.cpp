@@ -65,7 +65,7 @@ void Board::setBoard(vector<vector<Die>> board)
 	gameboard = board;
 }
 
-vector<vector<Die>> Board::movePiece(int x, int y, vector<vector<Die>> &gameboard)
+void Board::movePieceDown(int x, int y, vector<vector<Die>> &gameboard)
 {
 	// TODO: Change name to downward move, only allow movement if space has an active Die, Change to void and set gameboard instead of return?
 	// TODO: OUT OF BOUNDS CHECKING!!!
@@ -78,7 +78,28 @@ vector<vector<Die>> Board::movePiece(int x, int y, vector<vector<Die>> &gameboar
 	// Set prior position to a blank die
 	gameboard[x][y] = *replacementDie;
 
-	return gameboard;
+	setBoard(gameboard);
+}
+
+// Function checks to make sure coordinates are not out of bounds
+bool Board::legalMove(int x, int y)
+{
+	// Check if x or y coordinate is out of the 2D vector bounds on the upper end
+	if (x > 8 || y > 7)
+	{
+		cout << endl << "Selected coordinates out of range" << endl;
+		cout << "Please select a new set of coordinates" << endl;
+		return false;
+	}
+	// Check if x or y is out of the 2D vector bounds on the low end
+	else if (x < 1 || y < 1)
+	{
+		cout << endl << "Selected coordinates out of range" << endl;
+		cout << "Please select a new set of coordinates" << endl;
+		return false;
+	}
+
+	return true;
 }
 
 

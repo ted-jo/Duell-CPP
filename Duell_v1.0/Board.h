@@ -7,7 +7,8 @@ class Board
 public:
 	Board();
 	~Board();
-	vector<vector<Die>> movePiece(int, int, vector<vector<Die>> &);
+	void movePieceDown(int, int, vector<vector<Die>> &);
+	bool legalMove(int, int);
 	vector< vector<Die> > & GetBoard() { return gameboard; };
 	void setBoard(vector<vector<Die>>);
 private:
