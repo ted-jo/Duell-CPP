@@ -65,7 +65,7 @@ void Board::setBoard(vector<vector<Die>> board)
 	gameboard = board;
 }
 
-void Board::movePieceDown(int x, int y)
+void Board::movePieceUp(int x, int y)
 {
 	// TODO: Only allow movement if space has an active Die
 

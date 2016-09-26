@@ -17,18 +17,21 @@ void Die::setDie(vector<int> newDie)
 void Die::frontalMove()
 {
 	//Die * newDie = new Die();
-	vector<int> newDie (6, 0);
-		
-		newDie[0] = die[5];
-		newDie[1] = die[4];
-		newDie[2] = die[2];
-		newDie[3] = die[3];
-		newDie[4] = die[0];
-		newDie[5] = die[1];
+	vector<int> newDie(6, 0);
 
-		setDie(newDie);
 
-			
+	newDie[0] = die[5];
+	newDie[1] = die[4];
+	newDie[2] = die[2];
+	newDie[3] = die[3];
+	newDie[4] = die[0];
+	newDie[5] = die[1];
+
+
+
+	setDie(newDie);
+
+
 }
 
 // Move Right One Space
@@ -69,13 +72,29 @@ vector<int> Die::lateralLeftMove(vector<int> die)
 // Die[top, bottom, left, right, front, back]
 Die* Die::createStartingDie(Die * d, int topNum, int rightNum, string player)
 {
-	d->die[0] = topNum;
-	d->die[1] = 7 - topNum;
-	d->die[2] = 7 - rightNum;
-	d->die[3] = rightNum;
-	d->die[4] = 4;
-	d->die[5] = 3;
-	d->player = player;
+	// When creating a key piece set the keypiece bool to true
+	if (topNum == 1 && rightNum == 1)
+	{
+		d->die[0] = topNum;
+		d->die[1] = topNum;
+		d->die[2] = topNum;
+		d->die[3] = topNum;
+		d->die[4] = topNum;
+		d->die[5] = topNum;
+		d->player = player;
+		d->keypiece = true;
+	}
+	else
+	{	
+		d->die[0] = topNum;
+		d->die[1] = 7 - topNum;
+		d->die[2] = 7 - rightNum;
+		d->die[3] = rightNum;
+		d->die[4] = 4;
+		d->die[5] = 3;
+		d->player = player;
+		d->keypiece = false;
+	}
 
 	return d;
 }

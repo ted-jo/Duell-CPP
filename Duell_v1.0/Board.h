@@ -7,7 +7,7 @@ class Board
 public:
 	Board();
 	~Board();
-	void movePieceDown(int, int);
+	void movePieceUp(int, int);
 	bool checkOOB(int, int);
 	bool occupiedSpace(int, int);
 	vector< vector<Die> > & GetBoard() { return gameboard; };

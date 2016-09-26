@@ -26,7 +26,7 @@ void Game::round()
 		cin >> y;
 	} while (!boardObj->checkOOB(x, y));
 
-	boardObj->movePieceDown(x, y);
+	boardObj->movePieceUp(x, y);
 	boardViewObj->ViewBoard(boardObj->GetBoard());
 
 
