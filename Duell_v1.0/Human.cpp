@@ -22,11 +22,15 @@ void Human::getCoordinates()
 {
 	int x, y;
 
-	cout << "Choose X Coordinate of Die to move: ";
-	cin >> x;
-	cout << "Choose Y Coordinate of Die to move: ";
-	cin >> y;
+	do
+	{
+		cout << "Choose X Coordinate of Die to move: ";
+		cin >> x;
+		cout << "Choose Y Coordinate of Die to move: ";
+		cin >> y;
+	} while (!checkOOB(x, y));
 
+	
 	setCoordinates(x, y);
 	
 }

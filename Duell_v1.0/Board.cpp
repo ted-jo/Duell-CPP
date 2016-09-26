@@ -112,26 +112,7 @@ void Board::movePieceDown(int x, int y)
 }
 
 
-// Function checks to make sure coordinates are not out of bounds
-bool Board::checkOOB(int x, int y)
-{
-	// Check if x or y coordinate is out of the 2D vector bounds on the upper end
-	if (x > 8 || y > 9)
-	{
-		cout << endl << "Selected coordinates out of range" << endl;
-		cout << "Please select a new set of coordinates" << endl;
-		return false;
-	}
-	// Check if x or y is out of the 2D vector bounds on the low end
-	else if (x < 1 || y < 1)
-	{
-		cout << endl << "Selected coordinates out of range" << endl;
-		cout << "Please select a new set of coordinates" << endl;
-		return false;
-	}
 
-	return true;
-}
 
 // TODO: implement this during coodinate entry.
 bool Board::occupiedSpace(int x, int y)

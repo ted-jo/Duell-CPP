@@ -60,6 +60,7 @@ void Game::startGame()
 	while (!endGame)
 	{
 		round();
+		setEndGame();
 	}
 }
 
