@@ -13,12 +13,10 @@ void Die::setDie(vector<int> newDie)
 
 // Move forward by one space
 // Die[top, bottom, left, right, front, back]
-// newDie[back, front,left, right, top, bottom]
+// newDie[back, front, left, right, top, bottom]
 void Die::frontalMove()
 {
-	//Die * newDie = new Die();
 	vector<int> newDie(6, 0);
-
 
 	newDie[0] = die[5];
 	newDie[1] = die[4];
@@ -30,7 +28,23 @@ void Die::frontalMove()
 
 
 	setDie(newDie);
+}
 
+// Move backward by one space
+// Die[top, bottom, left, right, front, back]
+// newDie[front, back, left, right, bottom, top]
+void Die::backwardMove()
+{
+	vector<int> newDie(6, 0);
+
+	newDie[0] = die[4];
+	newDie[1] = die[5];
+	newDie[2] = die[2];
+	newDie[3] = die[3];
+	newDie[4] = die[1];
+	newDie[5] = die[0];
+
+	setDie(newDie);
 
 }
 

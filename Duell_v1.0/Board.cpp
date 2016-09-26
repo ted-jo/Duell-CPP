@@ -73,8 +73,40 @@ void Board::movePieceUp(int x, int y)
 	x--;
 	y--;
 
-	gameboard[y][x].frontalMove();
-	swap(gameboard[y][x], gameboard[y + 1][x]);
+	string player = gameboard[y][x].getPlayer();
+
+	if (player == "C")
+	{
+		gameboard[y][x].frontalMove();
+		swap(gameboard[y][x], gameboard[y + 1][x]);
+	}
+	else
+	{
+		gameboard[y][x].backwardMove();
+		swap(gameboard[y][x], gameboard[y + 1][x]);
+	}
+
+
+	setBoard(gameboard);
+}
+
+void Board::movePieceDown(int x, int y)
+{
+	// Sets the x, y index - 1 since vector starts at index 0
+	x--;
+	y--;
+
+	string player = gameboard[y][x].getPlayer();
+	if (player == "C")
+	{
+		gameboard[y][x].backwardMove();
+		swap(gameboard[y][x], gameboard[y - 1][x]);
+	}
+	else
+	{
+		gameboard[y][x].frontalMove();
+		swap(gameboard[y][x], gameboard[y - 1][x]);
+	}
 
 	setBoard(gameboard);
 }

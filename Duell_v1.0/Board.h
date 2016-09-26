@@ -8,6 +8,7 @@ public:
 	Board();
 	~Board();
 	void movePieceUp(int, int);
+	void movePieceDown(int, int);
 	bool checkOOB(int, int);
 	bool occupiedSpace(int, int);
 	vector< vector<Die> > & GetBoard() { return gameboard; };

@@ -10,6 +10,7 @@ public:
 	string getPlayer() { return player; }
 	void setDie(vector<int>);
 	void frontalMove();
+	void backwardMove();
 	Die* createStartingDie(Die *, int, int, string);
 	vector<int> lateralRightMove(vector<int>);
 	vector<int> lateralLeftMove(vector<int>);

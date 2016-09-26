@@ -29,6 +29,17 @@ void Game::round()
 	boardObj->movePieceUp(x, y);
 	boardViewObj->ViewBoard(boardObj->GetBoard());
 
+	do
+	{
+		cout << "Choose X Coordinate of Die to move: ";
+		cin >> x;
+		cout << "Choose Y Coordinate of Die to move: ";
+		cin >> y;
+	} while (!boardObj->checkOOB(x, y));
+
+	boardObj->movePieceDown(x, y);
+	boardViewObj->ViewBoard(boardObj->GetBoard());
+
 
 }
 
