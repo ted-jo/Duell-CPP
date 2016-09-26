@@ -148,16 +148,22 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="boardView.h" />
+    <ClInclude Include="Computer.h" />
     <ClInclude Include="Die.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Human.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="boardView.cpp" />
+    <ClCompile Include="Computer.cpp" />
     <ClCompile Include="Die.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Human.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
