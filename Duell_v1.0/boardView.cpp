@@ -15,16 +15,12 @@ void boardView::ViewBoard(vector<vector<Die>>& gameboard)
 {
 	int rowIndex = 8; // Index for y coordinates
 	cout << endl << endl;
-	cout << "    ";
-	// Print x coordinates
-	for (int j = 1; j <= 9; j++)
-	{
-		cout << j << "   ";
-	}
+	
+
 	cout << endl;
 
 	// Iterate & Print 2D Vector 
-	for (int i = 0; i < gameboard.size(); i++)
+	for (int i = 7; i >= 0; i--)
 	{
 		cout << "  +---+---+---+---+---+---+---+---+---+" << endl;
 		cout << rowIndex << " ";
@@ -46,7 +42,15 @@ void boardView::ViewBoard(vector<vector<Die>>& gameboard)
 		cout << "|" << endl;
 	}
 	cout << "  +---+---+---+---+---+---+---+---+---+" << endl;
+	cout << "    ";
+	// Print x coordinates
+	for (int j = 1; j <= 9; j++)
+	{
+		cout << j << "   ";
+	}
+	cout << endl << endl;
 }
+
 
 
 
