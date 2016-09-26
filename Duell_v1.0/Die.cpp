@@ -51,9 +51,9 @@ void Die::backwardMove()
 // Move Right One Space
 // Die[top, bottom, left, right, front, back]
 // newDie[left, right, bottom, top, front, back]
-vector<int> Die::lateralRightMove(vector<int> die)
+void Die::lateralRightMove()
 {
-	vector<int> newDie;
+	vector<int> newDie(6, 0);
 
 	newDie[0] = die[2];
 	newDie[1] = die[3];
@@ -62,15 +62,15 @@ vector<int> Die::lateralRightMove(vector<int> die)
 	newDie[4] = die[4];
 	newDie[5] = die[5];
 
-	return newDie;
+	setDie(newDie);
 }
 
 // Move Left One Space
 // Die[top, bottom, left, right, front, back]
 // newDie[right, left, top, bottom, front, back]
-vector<int> Die::lateralLeftMove(vector<int> die)
+void Die::lateralLeftMove()
 {
-	vector<int> newDie;
+	vector<int> newDie(6, 0);
 
 	newDie[0] = die[3];
 	newDie[1] = die[2];
@@ -79,7 +79,19 @@ vector<int> Die::lateralLeftMove(vector<int> die)
 	newDie[4] = die[4];
 	newDie[5] = die[5];
 
-	return newDie;
+	setDie(newDie);
+}
+
+bool Die::isEmpty()
+{
+	if (die[0] == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // Create starting die based off given top number
@@ -124,8 +136,5 @@ string Die::displayDie()
 	sTop = to_string(top);
 	sRight = to_string(right);
 	
-
-
-
 	return player + sTop + sRight;
 }

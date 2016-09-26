@@ -111,6 +111,7 @@ void Board::movePieceDown(int x, int y)
 	setBoard(gameboard);
 }
 
+
 // Function checks to make sure coordinates are not out of bounds
 bool Board::checkOOB(int x, int y)
 {

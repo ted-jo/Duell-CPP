@@ -11,9 +11,11 @@ public:
 	void setDie(vector<int>);
 	void frontalMove();
 	void backwardMove();
+	void lateralRightMove();
+	void lateralLeftMove();
+	bool isEmpty();
 	Die* createStartingDie(Die *, int, int, string);
-	vector<int> lateralRightMove(vector<int>);
-	vector<int> lateralLeftMove(vector<int>);
+
 	string displayDie();
 private:
 	vector<int> die;
