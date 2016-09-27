@@ -150,7 +150,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		// Check Y movement then X movement
 		else if (direction == 1)
 		{
-			// TODO: its checking against the starting position add ++
 			for (startY; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")

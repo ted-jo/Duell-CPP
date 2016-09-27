@@ -3,6 +3,7 @@
 
 
 
+
 Human::Human()
 {
 }
@@ -12,25 +13,75 @@ Human::~Human()
 {
 }
 
-void Human::setCoordinates(int x, int y)
+void Human::play()
 {
-	xCoord = x;
-	yCoord = y;
+	cout << "Its You're Turn!" << endl;
+	// Display Board
+	boardViewObj->ViewBoard(boardObj->GetBoard());
+
+	getCoordinates();
+}
+
+void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int endYCoord, char directionInput)
+{
+	startX = startXCoord;
+	startY = startYCoord;
+	endX = endXCoord;
+	endY = endYCoord;
+	direction = directionInput;
+
 }
 
 void Human::getCoordinates()
 {
-	int x, y;
+	int x, y, endX, endY, directionInput;
+	bool validInput = false;
 
 	do
 	{
-		cout << "Choose X Coordinate of Die to move: ";
+		cout << "Enter X Coordinate of Die to move: ";
 		cin >> x;
-		cout << "Choose Y Coordinate of Die to move: ";
+		cout << "Enter Y Coordinate of Die to move: ";
 		cin >> y;
-	} while (!checkOOB(x, y));
+		cout << "Enter X Coordinate of Desired End Space: ";
+		cin >> endX;
+		cout << "Enter Y Coordinate of Desired End Space: ";
+		cin >> endY;
 
+		// If the Y coordinates are not equal there is a lateral movement
+		if (x != endX)
+		{
+			do
+			{
+				cout << "Would you like to move Forward or Lateral first?" << endl;
+				cout << "Enter '1' for Forward or '2' for Lateral: ";
+				cin >> directionInput;
+			} while (!((directionInput != 1) || (directionInput != 2)));
+			
+		}
+		else
+		{
+			// Set direction to n if there's no rotation 
+			directionInput = 0;
+			
+		}
+
+		// Sets the x, y index - 1 since vector starts at index 0
+		x--;
+		y--;
+		endX--;
+		endY--;
+
+		// Send the coordinates, direction, and player to the validation function
+		validInput = validateMove(x, y, endX, endY, directionInput, "H");
+
+		
+	} while (!validInput);
+
+	cout << "You are moving Piece (" << x + 1 << ", " << y + 1 << ")" << " to space (" << endX + 1 << ", " << endY + 1 << ")" << endl;
 	
-	setCoordinates(x, y);
+
+
+	setCoordinates(x, y, endX, endY, directionInput);
 	
 }

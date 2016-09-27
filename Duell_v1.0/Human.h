@@ -7,12 +7,13 @@ class Human : public Player
 public:
 	Human();
 	~Human();
-	void setCoordinates(int, int);
+	void play();
+	void setCoordinates(int, int, int, int, char);
 	void getCoordinates();
-	int getXCoordinate() { return xCoord; }
-	int getYCoordinate() { return yCoord; }
+	int getStartXCoordinate() { return startX; }
+	int getStartYCoordinate() { return startY; }
 private:
-	int xCoord;
-	int yCoord;
+	int startX, startY, endX, endY;
+	char direction;
 };
 
