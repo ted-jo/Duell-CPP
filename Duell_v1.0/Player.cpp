@@ -128,9 +128,31 @@ void Player::executeMove(int startX, int startY, int endX, int endY, int directi
 		// First Movement Lateral
 		else if(direction == 2)
 		{
+			// Move Lateral to the end X location
+			// If start X > end X -> move left
+			if (startX > endX)
+			{
+				for (startX; startX > endX; startX--)
+				{
+					boardObj->movePieceLeft(startX, endY);
+				}
+			}
+			else
+			{
+				for (startX; startX < endX; startX++)
+				{
+					boardObj->movePieceRight(startX, startY);
+				}
+			}
 
+			// Move forward until the end Y location
+			for (startY; startY < endY; startY++)
+			{
+				boardObj->movePieceUp(startX, startY);
+			}
 		}
 	}
 }
+
 
 

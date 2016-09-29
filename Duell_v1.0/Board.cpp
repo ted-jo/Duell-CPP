@@ -138,6 +138,7 @@ void Board::movePieceRight(int x, int y)
 	setBoard(gameboard);
 }
 
+
 // TODO: implement this during coodinate entry.
 bool Board::checkOccupiedSpace(int x, int y, string player)
 {
@@ -203,7 +204,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		// Check X movement first then Y movement
 		else
 		{
-			for (startX; startX <= endX; startX++)
+			for (startX++; startX <= endX; startX++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
 				{
@@ -211,7 +212,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				}
 			}
 
-			for (startY++; startY <= endY; startY++)
+			for (startY; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
 				{
