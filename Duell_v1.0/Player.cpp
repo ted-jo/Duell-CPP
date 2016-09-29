@@ -88,4 +88,49 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 	return validation;
 }
 
+void Player::executeMove(int startX, int startY, int endX, int endY, int direction, string player)
+{
+	if (player == "H")
+	{
+		// No Lateral Movement
+		if (direction == 0)
+		{
+			for (startY; startY < endY; startY++)
+			{
+				boardObj->movePieceUp(startX, startY);
+			}
+		}
+		// First movement forward
+		else if (direction == 1)
+		{
+			// Move forward until the end Y location
+			for (startY; startY < endY; startY++)
+			{
+				boardObj->movePieceUp(startX, startY);
+			}
+			// Move Lateral to the end X location
+			// If start X > end X -> move left
+			if (startX > endX)
+			{
+				for (startX; startX > endX; startX--)
+				{
+					boardObj->movePieceLeft(startX, endY);
+				}
+			}
+			else
+			{
+				for (startX; startX < endX; startX++)
+				{
+					boardObj->movePieceRight(startX, startY);
+				}
+			}
+		}
+		// First Movement Lateral
+		else if(direction == 2)
+		{
+
+		}
+	}
+}
+
 

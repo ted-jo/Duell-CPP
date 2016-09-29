@@ -67,10 +67,9 @@ void Board::setBoard(vector<vector<Die>> board)
 
 void Board::movePieceUp(int x, int y)
 {
-	// TODO: Only allow movement if space has an active Die
 	string player = gameboard[y][x].getPlayer();
 
-	if (player == "C")
+	if (player == "H")
 	{
 		gameboard[y][x].frontalMove();
 		swap(gameboard[y][x], gameboard[y + 1][x]);
@@ -78,7 +77,7 @@ void Board::movePieceUp(int x, int y)
 	else
 	{
 		gameboard[y][x].backwardMove();
-		swap(gameboard[y][x], gameboard[y + 1][x]);
+		swap(gameboard[y][x], gameboard[y - 1][x]);
 	}
 
 
@@ -88,7 +87,7 @@ void Board::movePieceUp(int x, int y)
 void Board::movePieceDown(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
-	if (player == "C")
+	if (player == "H")
 	{
 		gameboard[y][x].backwardMove();
 		swap(gameboard[y][x], gameboard[y - 1][x]);
@@ -102,17 +101,48 @@ void Board::movePieceDown(int x, int y)
 	setBoard(gameboard);
 }
 
+void Board::movePieceLeft(int x, int y)
+{
+	string player = gameboard[y][x].getPlayer();
+	if (player == "H")
+	{
+		gameboard[y][x].lateralLeftMove();
+		swap(gameboard[y][x], gameboard[y][x - 1]);
+	}
+	else
+	{
+		gameboard[y][x].lateralRightMove();
+		swap(gameboard[y][x], gameboard[y][x + 1]);
+	}
+
+	setBoard(gameboard);
+}
 
 
+
+
+void Board::movePieceRight(int x, int y)
+{
+	string player = gameboard[y][x].getPlayer();
+	if (player == "H")
+	{
+		gameboard[y][x].lateralRightMove();
+		swap(gameboard[y][x], gameboard[y][x + 1]);
+	}
+	else
+	{
+		gameboard[y][x].lateralLeftMove();
+		swap(gameboard[y][x], gameboard[y][x - 1]);
+	}
+
+	setBoard(gameboard);
+}
 
 // TODO: implement this during coodinate entry.
 bool Board::checkOccupiedSpace(int x, int y, string player)
 {
-	if (gameboard[y][x].displayDie() == "00")
+	if (gameboard[y][x].isEmpty())
 	{
-		cout << endl << "No valid piece on given coordinates" << endl;
-		cout << "Please select a new set of coordinates" << endl;
-
 		return false;
 	}
 	// Check if Player is moving correct Die
@@ -136,9 +166,9 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		{
 			// Loop through every Y coordinate of the planned path
 			// If a space is occupied by any Die return false
-			for (startY; startY <= endY; startY++)
+			for (startY++; startY <= endY; startY++)
 			{
-				if (gameboard[startY][startX].displayDie() != "00")
+				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
@@ -151,7 +181,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		else if (direction == 1)
 		{
 			// TODO: its checking against the starting position add ++
-			for (startY; startY <= endY; startY++)
+			for (startY++; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
 				{
@@ -181,7 +211,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				}
 			}
 
-			for (startY; startY <= endY; startY++)
+			for (startY++; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
 				{

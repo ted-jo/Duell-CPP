@@ -8,12 +8,11 @@ public:
 	Human();
 	~Human();
 	void play();
-	void setCoordinates(int, int, int, int, char);
+	void setCoordinates(int, int, int, int, int);
 	void getCoordinates();
 	int getStartXCoordinate() { return startX; }
 	int getStartYCoordinate() { return startY; }
 private:
-	int startX, startY, endX, endY;
-	char direction;
+	int startX, startY, endX, endY, direction;
 };
 

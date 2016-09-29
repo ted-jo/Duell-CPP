@@ -20,9 +20,10 @@ void Human::play()
 	boardViewObj->ViewBoard(boardObj->GetBoard());
 
 	getCoordinates();
+	executeMove(startX, startY, endX, endY, direction, "H");
 }
 
-void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int endYCoord, char directionInput)
+void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int endYCoord, int directionInput)
 {
 	startX = startXCoord;
 	startY = startYCoord;
@@ -79,8 +80,6 @@ void Human::getCoordinates()
 	} while (!validInput);
 
 	cout << "You are moving Piece (" << x + 1 << ", " << y + 1 << ")" << " to space (" << endX + 1 << ", " << endY + 1 << ")" << endl;
-	
-
 
 	setCoordinates(x, y, endX, endY, directionInput);
 	
