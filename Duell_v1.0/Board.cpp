@@ -151,7 +151,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		else if (direction == 1)
 		{
 			// TODO: its checking against the starting position add ++
-			for (startY++; startY <= endY; startY++)
+			for (startY; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
 				{
