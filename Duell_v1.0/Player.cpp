@@ -90,6 +90,7 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 
 void Player::executeMove(int startX, int startY, int endX, int endY, int direction, string player)
 {
+	// TODO: Add Computer Move
 	if (player == "H")
 	{
 		// No Lateral Movement
@@ -149,6 +150,70 @@ void Player::executeMove(int startX, int startY, int endX, int endY, int directi
 			for (startY; startY < endY; startY++)
 			{
 				boardObj->movePieceUp(startX, startY);
+			}
+		}
+	}
+
+}
+
+vector<int> Player::getHumanKeypieceLoc()
+{
+	vector<int> location;
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+
+	for (int i = 7; i >= 0; i--)
+	{
+		for (int j = 0; j < tempBoard[i].size(); j++)
+		{
+			// If Die piece is a Human keypiece add coordinates
+			// to to vector and return
+			if (tempBoard[i][j].getPlayer() == "H" && tempBoard[i][j].getKeyPiece() == true)
+			{
+				location.push_back(i);
+				location.push_back(j);
+			}
+		}
+	}
+
+	return location;
+}
+
+bool Player::keyPieceAttack()
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	vector<int> HumanKeyPieceLocation = getHumanKeypieceLoc();
+	int x = HumanKeyPieceLocation[0];
+	int y = HumanKeyPieceLocation[1];
+
+	for (int i = 7; i >= 0; i--)
+	{
+		for (int j = 0; j < tempBoard[i].size(); j++)
+		{
+			// If Die piece is a computer piece check all possible moves
+			// to either overtake the Human keypiece or the keyspace
+			if (tempBoard[i][j].getPlayer() == "C")
+			{
+				// Check if the Computer Piece is the correct
+				// number of spaces from the Human Key Piece
+				if (boardObj->checkNumSpaces(i, j, x, y) == true)
+				{
+					if (boardObj->checkPath(i, j, x, y, 0) == true)
+					{
+						executeMove(i, j, x, y, 0, "C");
+						return true;
+					}
+					else if (boardObj->checkPath(i, j, x, y, 1) == true)
+					{
+						executeMove(i, j, x, y, 1, "C");
+						return true;
+					}
+					else if (boardObj->checkPath(i, j, x, y, 2) == true)
+					{
+						executeMove(i, j, x, y, 2, "C");
+						return true;
+					}
+
+				}
 			}
 		}
 	}

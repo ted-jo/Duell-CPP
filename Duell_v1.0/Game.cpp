@@ -18,6 +18,7 @@ void Game::round()
 	while (endGame == false)
 	{
 		humanObj->play();
+		computerObj->play();
 
 	}
 }

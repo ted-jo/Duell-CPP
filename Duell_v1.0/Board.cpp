@@ -181,7 +181,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		// Check Y movement then X movement
 		else if (direction == 1)
 		{
-			// TODO: its checking against the starting position add ++
 			for (startY++; startY <= endY; startY++)
 			{
 				if (gameboard[startY][startX].displayDie() != "00")
@@ -225,7 +224,66 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 	}
 	else
 	{
+		// If there is no lateral movement
+		// Check the vertical path for obstructing Die pieces
+		if (direction == 0)
+		{
+			// Loop through every Y coordinate of the planned path
+			// If a space is occupied by any Die return false
+			for (startY--; startY >= endY; startY--)
+			{
+				if (!gameboard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+			}
 
+			return true;
+		}
+		// If forward movement is first
+		// Check Y movement then X movement
+		else if (direction == 1)
+		{
+			for (startY--; startY >= endY; startY--)
+			{
+				if (!gameboard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+			}
+
+			for (startX; startX <= endX; startX++)
+			{
+				if (!gameboard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		// If lateral movement is first
+		// Check X movement first then Y movement
+		else
+		{
+			for (startX++; startX <= endX; startX++)
+			{
+				if (!gameboard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+			}
+
+			for (startY; startY >= endY; startY--)
+			{
+				if (!gameboard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 
 	return false;
