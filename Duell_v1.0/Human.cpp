@@ -16,8 +16,6 @@ Human::~Human()
 void Human::play()
 {
 	cout << "Its You're Turn!" << endl;
-	// Display Board
-	boardViewObj->ViewBoard(boardObj->GetBoard());
 
 	getCoordinates();
 	executeMove(startX, startY, endX, endY, direction, "H");

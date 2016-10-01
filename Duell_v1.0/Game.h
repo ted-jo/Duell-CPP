@@ -11,9 +11,12 @@ public:
 	void round();
 	void startGame();
 	void setEndGame();
+	Board getBoard() { return * boardObj; }
 private:
 	Human * humanObj;
 	Computer * computerObj;
+	Board * boardObj;
+	boardView * boardViewObj;
 	bool endGame = false;
 
 };

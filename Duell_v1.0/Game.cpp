@@ -6,6 +6,8 @@ Game::Game()
 {
 	humanObj = new Human();
 	computerObj = new Computer();
+	boardObj = new Board();
+	boardViewObj = new boardView();
 }
 
 
@@ -17,7 +19,9 @@ void Game::round()
 {
 	while (endGame == false)
 	{
+		boardViewObj->ViewBoard(boardObj->GetBoard());
 		humanObj->play();
+		boardViewObj->ViewBoard(boardObj->GetBoard());
 		computerObj->play();
 
 	}

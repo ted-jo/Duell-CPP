@@ -5,9 +5,6 @@
 
 Player::Player()
 {
-	boardObj = new Board();
-	boardViewObj = new boardView();
-
 }
 
 Player::~Player()

@@ -18,10 +18,6 @@ public:
 	// Computer AI Functions
 	// First Pass
 	bool keyPieceAttack();
-
-protected:
-	Board * boardObj;
-	boardView * boardViewObj;
 private:
 	int humanWin;
 	int computerWin;
