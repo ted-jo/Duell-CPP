@@ -171,8 +171,8 @@ vector<int> Player::getHumanKeypieceLoc()
 			// to to vector and return
 			if (tempBoard[i][j].getPlayer() == "H" && tempBoard[i][j].getKeyPiece() == true)
 			{
-				location.push_back(i);
 				location.push_back(j);
+				location.push_back(i);
 			}
 		}
 	}
@@ -180,38 +180,43 @@ vector<int> Player::getHumanKeypieceLoc()
 	return location;
 }
 
+bool Player::checkHumanAttack()
+{
+	return false;
+}
+
 bool Player::keyPieceAttack()
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	vector<int> HumanKeyPieceLocation = getHumanKeypieceLoc();
-	int x = HumanKeyPieceLocation[0];
-	int y = HumanKeyPieceLocation[1];
+	int endX = HumanKeyPieceLocation[0];
+	int endY = HumanKeyPieceLocation[1];
 
-	for (int i = 7; i >= 0; i--)
+	for (int y = 0; y <= 7; y++)
 	{
-		for (int j = 0; j < tempBoard[i].size(); j++)
+		for (int x = 0; x <= 8; x++)
 		{
 			// If Die piece is a computer piece check all possible moves
 			// to either overtake the Human keypiece or the keyspace
-			if (tempBoard[i][j].getPlayer() == "C")
+			if (tempBoard[y][x].getPlayer() == "C")
 			{
 				// Check if the Computer Piece is the correct
 				// number of spaces from the Human Key Piece
-				if (boardObj->checkNumSpaces(i, j, x, y) == true)
+				if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
 				{
-					if (boardObj->checkPath(i, j, x, y, 0) == true)
+					if (boardObj->checkPath(x, y, endX, endY, 0) == true)
 					{
-						executeMove(i, j, x, y, 0, "C");
+						executeMove(x, y, endX, endY, 0, "C");
 						return true;
 					}
-					else if (boardObj->checkPath(i, j, x, y, 1) == true)
+					else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
 					{
-						executeMove(i, j, x, y, 1, "C");
+						executeMove(x, y, endX, endY, 1, "C");
 						return true;
 					}
-					else if (boardObj->checkPath(i, j, x, y, 2) == true)
+					else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
 					{
-						executeMove(i, j, x, y, 2, "C");
+						executeMove(x, y, endX, endY, 2, "C");
 						return true;
 					}
 
@@ -220,6 +225,14 @@ bool Player::keyPieceAttack()
 		}
 	}
 
+	return false;
+}
+
+// Second Pass of AI
+// Check if Human player can strike Computer KeyPiece
+// Execute blocking 
+bool Player::protectKeyPiece()
+{
 	return false;
 }
 

@@ -17,9 +17,12 @@ public:
 	bool validateMove(int, int, int, int, int, string);
 	void executeMove(int, int, int, int, int, string);
 	vector<int> getHumanKeypieceLoc();
+	bool checkHumanAttack();
 	// Computer AI Functions
 	// First Pass
 	bool keyPieceAttack();
+	// Second Pass
+	bool protectKeyPiece();
 protected:
 	Board * boardObj;
 private:
