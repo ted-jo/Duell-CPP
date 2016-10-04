@@ -13,12 +13,13 @@ Human::~Human()
 {
 }
 
-void Human::play()
+Board * Human::play()
 {
 	cout << "Its You're Turn!" << endl;
 
 	getCoordinates();
 	executeMove(startX, startY, endX, endY, direction, "H");
+	return boardObj;
 }
 
 void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int endYCoord, int directionInput)

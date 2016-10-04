@@ -11,6 +11,11 @@ Player::~Player()
 {
 }
 
+void Player::setBoard(Board * board)
+{
+	boardObj = board;
+}
+
 // Function checks to make sure coordinates are not out of bounds
 bool Player::checkOOB(int x, int y)
 {
@@ -214,6 +219,8 @@ bool Player::keyPieceAttack()
 			}
 		}
 	}
+
+	return false;
 }
 
 

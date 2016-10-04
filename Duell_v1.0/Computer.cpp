@@ -11,7 +11,7 @@ Computer::~Computer()
 {
 }
 
-void Computer::play()
+Board * Computer::play()
 {
 	cout << "Its the Computer's Turn!" << endl;
 	// Try to execute attack on Human KeyPiece
@@ -22,4 +22,10 @@ void Computer::play()
 		cout << "Computer Wins!" << endl;
 
 	}
+	else
+	{
+		cout << "No keypiec attack moves" << endl;
+	}
+
+	return boardObj;
 }

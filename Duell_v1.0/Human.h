@@ -7,7 +7,7 @@ class Human : public Player
 public:
 	Human();
 	~Human();
-	void play();
+	Board * play();
 	void setCoordinates(int, int, int, int, int);
 	void getCoordinates();
 	int getStartXCoordinate() { return startX; }

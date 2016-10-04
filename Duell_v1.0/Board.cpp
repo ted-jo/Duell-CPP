@@ -294,7 +294,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 bool Board::checkNumSpaces(int startX, int startY, int endX, int endY)
 {
 	int tempX, tempY, tempXY;
-	vector<int> die = gameboard[startY][startX].getDie();
+	vector<int> die = gameboard[startX][startY].getDie();
 	// Get number of moves allowed
 	int move = die[0];
 

@@ -12,6 +12,7 @@ public:
 	void startGame();
 	void setEndGame();
 	Board getBoard() { return * boardObj; }
+	void setBoard(Board *);
 private:
 	Human * humanObj;
 	Computer * computerObj;

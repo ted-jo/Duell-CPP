@@ -10,7 +10,9 @@ public:
 	Player();
 	~Player();
 	// Play is virtual so its overwritten in Human and Player. It will control a single turn of play
-	virtual void play() = 0;
+	virtual Board * play() = 0;
+	Board getBoard() { return * boardObj; }
+	void setBoard(Board *);
 	bool checkOOB(int, int);
 	bool validateMove(int, int, int, int, int, string);
 	void executeMove(int, int, int, int, int, string);
@@ -18,6 +20,8 @@ public:
 	// Computer AI Functions
 	// First Pass
 	bool keyPieceAttack();
+protected:
+	Board * boardObj;
 private:
 	int humanWin;
 	int computerWin;

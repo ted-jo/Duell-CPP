@@ -15,15 +15,21 @@ Game::~Game()
 {
 }
 
+void Game::setBoard(Board * board)
+{
+	boardObj = board;
+}
+
 void Game::round()
 {
 	while (endGame == false)
 	{
 		boardViewObj->ViewBoard(boardObj->GetBoard());
-		humanObj->play();
+		humanObj->setBoard(boardObj);
+		setBoard(humanObj->play());
 		boardViewObj->ViewBoard(boardObj->GetBoard());
-		computerObj->play();
-
+		computerObj->setBoard(boardObj);
+		setBoard(computerObj->play());
 	}
 }
 
@@ -42,3 +48,5 @@ void Game::setEndGame()
 {
 	endGame = true;
 }
+
+
