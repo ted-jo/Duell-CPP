@@ -158,7 +158,9 @@ void Player::executeMove(int startX, int startY, int endX, int endY, int directi
 
 }
 
-vector<int> Player::getHumanKeypieceLoc()
+// Function finds either the Human or computer keypiece and
+// stores the coordinates in a vector
+vector<int> Player::getKeypieceLoc(string player)
 {
 	vector<int> location;
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -167,12 +169,21 @@ vector<int> Player::getHumanKeypieceLoc()
 	{
 		for (int j = 0; j < tempBoard[i].size(); j++)
 		{
-			// If Die piece is a Human keypiece add coordinates
-			// to to vector and return
-			if (tempBoard[i][j].getPlayer() == "H" && tempBoard[i][j].getKeyPiece() == true)
+			if (player == "C")
 			{
-				location.push_back(j);
-				location.push_back(i);
+				if (tempBoard[i][j].getPlayer() == "H" && tempBoard[i][j].getKeyPiece() == true)
+				{
+					location.push_back(j);
+					location.push_back(i);
+				}
+			}
+			else
+			{
+				if (tempBoard[i][j].getPlayer() == "C" && tempBoard[i][j].getKeyPiece() == true)
+				{
+					location.push_back(j);
+					location.push_back(i);
+				}
 			}
 		}
 	}
@@ -180,48 +191,76 @@ vector<int> Player::getHumanKeypieceLoc()
 	return location;
 }
 
-bool Player::checkHumanAttack()
-{
-	return false;
-}
 
-bool Player::keyPieceAttack()
+bool Player::keyPieceAttack(string player)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-	vector<int> HumanKeyPieceLocation = getHumanKeypieceLoc();
-	int endX = HumanKeyPieceLocation[0];
-	int endY = HumanKeyPieceLocation[1];
+	vector<int> KeyPieceLocation = getKeypieceLoc(player);
+	int endX = KeyPieceLocation[0];
+	int endY = KeyPieceLocation[1];
 
 	for (int y = 0; y <= 7; y++)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
-			// If Die piece is a computer piece check all possible moves
-			// to either overtake the Human keypiece or the keyspace
-			if (tempBoard[y][x].getPlayer() == "C")
+			// TODO: check against key space
+			if (player == "C")
 			{
-				// Check if the Computer Piece is the correct
-				// number of spaces from the Human Key Piece
-				if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
+				// If Die piece is a computer piece check all possible moves
+				// to either overtake the Human keypiece or the keyspace
+				if (tempBoard[y][x].getPlayer() == "C")
 				{
-					if (boardObj->checkPath(x, y, endX, endY, 0) == true)
+					// Check if the Computer Piece is the correct
+					// number of spaces from the Human Key Piece
+					if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
 					{
-						executeMove(x, y, endX, endY, 0, "C");
-						return true;
-					}
-					else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
-					{
-						executeMove(x, y, endX, endY, 1, "C");
-						return true;
-					}
-					else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
-					{
-						executeMove(x, y, endX, endY, 2, "C");
-						return true;
-					}
+						if (boardObj->checkPath(x, y, endX, endY, 0) == true)
+						{
+							executeMove(x, y, endX, endY, 0, "C");
+							return true;
+						}
+						else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+						{
+							executeMove(x, y, endX, endY, 1, "C");
+							return true;
+						}
+						else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
+						{
+							executeMove(x, y, endX, endY, 2, "C");
+							return true;
+						}
 
+					}
 				}
 			}
+			else
+			{
+				// If Die piece is a computer piece check all possible moves
+				// to either overtake the Human keypiece or the keyspace
+				if (tempBoard[y][x].getPlayer() == "H")
+				{
+					// Check if the Computer Piece is the correct
+					// number of spaces from the Human Key Piece
+					if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
+					{
+						// TODO: Need to add collision
+						if (boardObj->checkPath(x, y, endX, endY, 0) == true)
+						{
+							return true;
+						}
+						else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+						{
+							return true;
+						}
+						else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
+						{
+							return true;
+						}
+
+					}
+				}
+			}
+
 		}
 	}
 

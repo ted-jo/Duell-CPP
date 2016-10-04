@@ -16,11 +16,11 @@ public:
 	bool checkOOB(int, int);
 	bool validateMove(int, int, int, int, int, string);
 	void executeMove(int, int, int, int, int, string);
-	vector<int> getHumanKeypieceLoc();
-	bool checkHumanAttack();
+	vector<int> getKeypieceLoc(string);
+
 	// Computer AI Functions
 	// First Pass
-	bool keyPieceAttack();
+	bool keyPieceAttack(string);
 	// Second Pass
 	bool protectKeyPiece();
 protected:
