@@ -125,6 +125,21 @@ Die* Die::createStartingDie(Die * d, int topNum, int rightNum, string player)
 	return d;
 }
 
+Die* Die::createBlankDie(Die * d)
+{
+		d->die[0] = 0;
+		d->die[1] = 0;
+		d->die[2] = 0;
+		d->die[3] = 0;
+		d->die[4] = 0;
+		d->die[5] = 0;
+		d->player = "";
+		d->keypiece = false;
+	
+
+	return d;
+}
+
 
 string Die::displayDie()
 {

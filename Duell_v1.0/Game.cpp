@@ -28,8 +28,8 @@ void Game::round()
 		humanObj->setBoard(boardObj);
 		setBoard(humanObj->play());
 		boardViewObj->ViewBoard(boardObj->GetBoard());
-		computerObj->setBoard(boardObj);
-		setBoard(computerObj->play());
+		//computerObj->setBoard(boardObj);
+		//setBoard(computerObj->play());
 	}
 }
 

@@ -138,6 +138,13 @@ void Board::movePieceRight(int x, int y)
 	setBoard(gameboard);
 }
 
+void Board::overtakePiece(int x, int y)
+{
+	Die * newDie = new Die();
+
+	gameboard[y][x] = *newDie->createBlankDie(newDie);
+}
+
 
 // TODO: implement this during coodinate entry.
 bool Board::checkOccupiedSpace(int x, int y, string player)
@@ -158,6 +165,7 @@ bool Board::checkOccupiedSpace(int x, int y, string player)
 bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 {
 	string player = gameboard[startY][startX].getPlayer();
+	
 
 	if (player == "H")
 	{
@@ -171,8 +179,14 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
+
 			}
 
 			return true;
@@ -183,7 +197,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		{
 			for (startY++; startY <= endY; startY++)
 			{
-				if (gameboard[startY][startX].displayDie() != "00")
+				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
@@ -191,7 +205,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 
 			for (startX; startX <= endX; startX++)
 			{
-				if (gameboard[startY][startX].displayDie() != "00")
+				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
@@ -205,7 +219,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		{
 			for (startX++; startX <= endX; startX++)
 			{
-				if (gameboard[startY][startX].displayDie() != "00")
+				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
@@ -213,7 +227,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 
 			for (startY; startY <= endY; startY++)
 			{
-				if (gameboard[startY][startX].displayDie() != "00")
+				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
