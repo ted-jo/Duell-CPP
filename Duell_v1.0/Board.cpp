@@ -142,7 +142,9 @@ void Board::overtakePiece(int x, int y)
 {
 	Die * newDie = new Die();
 
-	gameboard[y][x] = *newDie->createBlankDie(newDie);
+	cout << gameboard[y][x].displayDie() << " has been overtaken and removed from play" << endl;
+
+	gameboard[y][x] = *newDie->createBlankDie(newDie);	
 }
 
 
@@ -207,6 +209,11 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startX == endX && gameboard[endY][endX].getPlayer() == "C")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
 			}
@@ -229,6 +236,11 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
 			}
@@ -248,6 +260,11 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
 			}
@@ -270,6 +287,11 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startX == endX && gameboard[endY][endX].getPlayer() == "H")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
 			}
@@ -292,6 +314,11 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			{
 				if (!gameboard[startY][startX].isEmpty())
 				{
+					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
+					{
+						overtakePiece(endX, endY);
+						return true;
+					}
 					return false;
 				}
 			}
