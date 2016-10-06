@@ -23,6 +23,7 @@ public:
 	bool keyPieceAttack(string);
 	// Second Pass
 	bool protectKeyPiece();
+	bool executeBlock(int, int);
 protected:
 	Board * boardObj;
 private:

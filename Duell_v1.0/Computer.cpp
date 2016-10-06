@@ -14,6 +14,7 @@ Computer::~Computer()
 Board * Computer::play()
 {
 	cout << "Its the Computer's Turn!" << endl;
+	// First Pass
 	// Try to execute attack on Human KeyPiece
 	if (keyPieceAttack("C"))
 	{

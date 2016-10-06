@@ -92,7 +92,6 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 
 void Player::executeMove(int startX, int startY, int endX, int endY, int direction, string player)
 {
-	// TODO: Add Computer Move
 	if (player == "H")
 	{
 		// No Lateral Movement
@@ -155,7 +154,69 @@ void Player::executeMove(int startX, int startY, int endX, int endY, int directi
 			}
 		}
 	}
+	// Execute Computer Move
+	else
+	{
+		// No Lateral Movement
+		if (direction == 0)
+		{
+			for (startY; startY > endY; startY--)
+			{
+				boardObj->movePieceDown(startX, startY);
+			}
+		}
+		// First movement forward
+		else if (direction == 1)
+		{
+			// Move forward until the end Y location
+			for (startY; startY > endY; startY--)
+			{
+				boardObj->movePieceUp(startX, startY);
+			}
+			// Move Lateral to the end X location
+			// If start X > end X -> move left
+			if (startX > endX)
+			{
+				for (startX; startX > endX; startX--)
+				{
+					boardObj->movePieceLeft(startX, endY);
+				}
+			}
+			else
+			{
+				for (startX; startX < endX; startX++)
+				{
+					boardObj->movePieceRight(startX, startY);
+				}
+			}
+		}
+		// First Movement Lateral
+		else if (direction == 2)
+		{
+			// Move Lateral to the end X location
+			// If start X > end X -> move left
+			if (startX > endX)
+			{
+				for (startX; startX > endX; startX--)
+				{
+					boardObj->movePieceLeft(startX, endY);
+				}
+			}
+			else
+			{
+				for (startX; startX < endX; startX++)
+				{
+					boardObj->movePieceRight(startX, startY);
+				}
+			}
 
+			// Move forward until the end Y location
+			for (startY; startY > endY; startY--)
+			{
+				boardObj->movePieceDown(startX, startY);
+			}
+		}
+	}
 }
 
 // Function finds either the Human or computer keypiece and
@@ -191,7 +252,7 @@ vector<int> Player::getKeypieceLoc(string player)
 	return location;
 }
 
-
+// TODO: check against key space
 bool Player::keyPieceAttack(string player)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -202,8 +263,7 @@ bool Player::keyPieceAttack(string player)
 	for (int y = 0; y <= 7; y++)
 	{
 		for (int x = 0; x <= 8; x++)
-		{
-			// TODO: check against key space
+		{			
 			if (player == "C")
 			{
 				// If Die piece is a computer piece check all possible moves
@@ -235,15 +295,14 @@ bool Player::keyPieceAttack(string player)
 			}
 			else
 			{
-				// If Die piece is a computer piece check all possible moves
-				// to either overtake the Human keypiece or the keyspace
+				// If Die piece is a human piece check all possible moves
+				// to either overtake the computer keypiece or the keyspace
 				if (tempBoard[y][x].getPlayer() == "H")
 				{
 					// Check if the Computer Piece is the correct
 					// number of spaces from the Human Key Piece
 					if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
 					{
-						// TODO: Need to add collision
 						if (boardObj->checkPath(x, y, endX, endY, 0) == true)
 						{
 							return true;
@@ -272,6 +331,110 @@ bool Player::keyPieceAttack(string player)
 // Execute blocking 
 bool Player::protectKeyPiece()
 {
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	vector<int> KeyPieceLocation = getKeypieceLoc("C");
+	int endX = KeyPieceLocation[0];
+	int endY = KeyPieceLocation[1];
+
+	for (int y = 0; y <= 7; y++)
+	{
+		for (int x = 0; x <= 8; x++)
+		{
+			// If Die piece is a human piece check all possible moves
+			// that can overtake the computer keypiece or the keyspace
+			if (tempBoard[y][x].getPlayer() == "H")
+			{
+				// Check if the Human Piece is the correct
+				// number of spaces from the Computer Key Piece
+				if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
+				{
+					// If check path is true, then Human has a winning move
+					// Execute block and return true
+					if (boardObj->checkPath(x, y, endX, endY, 0) || boardObj->checkPath(x, y, endX, endY, 2))
+					{
+						// For a forward or lateral->forward attack set --endY
+						// So block manuever is executed one space below keypiece
+						if (executeBlock(endX, --endY))
+						{
+							return true;
+						}
+					}
+					// For a forward->lateral attack
+					// Check if Human will be attacking from left or right 
+					// Execute Block on appropriate space
+					else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+					{
+						// Block Space to left of Keypiece
+						if (endX > x)
+						{
+							--endX;
+							if (checkOOB(endX, endY))
+							{
+								if (executeBlock(endX, endY))
+								{
+									return true;
+								}
+							}
+						}
+						else
+						{
+							++endX;
+							if (checkOOB(endX, endY))
+							{
+								if (executeBlock(endX, endY))
+								{
+									return true;
+								}
+							}
+						}
+
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+// TODO: Check against Keyspace
+bool Player::executeBlock(int endX, int endY)
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+
+	// Coordinates (endX, endY) is the Computer Keypiece
+	// To find a candidate to block from below
+	// find a Computer piece that can move to endX--
+
+	for (int y = 0; y <= 7; y++)
+	{
+		for (int x = 0; x <= 8; x++)
+		{
+			if (tempBoard[y][x].getPlayer() == "C")
+			{
+				if (boardObj->checkNumSpaces(x, y, endX, endY))
+				{
+					if (boardObj->checkPath(x, y, endX, endY, 0) == true)
+					{
+						executeMove(x, y, endX, endY, 0, "C");
+						return true;
+					}
+					else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+					{
+						executeMove(x, y, endX, endY, 1, "C");
+						return true;
+					}
+					else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
+					{
+						executeMove(x, y, endX, endY, 2, "C");
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	// If there are no possible blocking moves return false
 	return false;
 }
 
