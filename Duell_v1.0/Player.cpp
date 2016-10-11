@@ -594,8 +594,19 @@ vector<int> Player::checkBestMove(int startX, int startY)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
+			// write function to check all paths in player to remove redundant code
 			if (boardObj->checkNumSpaces(startX, startY, x, y))
 			{
+				if (boardObj->checkPath(startX, startY, x, y, 0))
+				{
+					vector<int> nulVec = {};
+					return nulVec;
+				}
+				else if (boardObj->checkPath(startX, startY, x, y, 1))
+				{
+					vector<int> nulVec = {};
+					return nulVec;
+				}
 				tempScore = (abs(x - endX) + abs(y - endY));
 				location.push_back(tempScore);
 				location.push_back(x);
@@ -631,8 +642,10 @@ int Player::executeClosestMove(int startX, int startY, int endX, int endY)
 		executeMove(startX, startY, endX, endY, 2, player);
 		return 2;
 	}
-
-	return -1;
+	else 
+	{
+		return -1;
+	}
 }
 
 
