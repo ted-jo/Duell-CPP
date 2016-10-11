@@ -18,6 +18,7 @@ public:
 	void executeMove(int, int, int, int, int, string);
 	vector<int> getKeypieceLoc(string);
 	void setWin(string);
+	bool checkHumanWin();
 
 	// Computer AI Functions
 	// First Pass

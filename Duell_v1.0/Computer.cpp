@@ -30,6 +30,7 @@ Board * Computer::play()
 	else if (keyPieceAttack("H"))
 	{
 		cout << "Human has finishing move initiate block" << endl;
+		protectKeyPiece();
 	}
 	else
 	{

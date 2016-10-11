@@ -316,6 +316,25 @@ void Player::setWin(string player)
 	}
 }
 
+bool Player::checkHumanWin()
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+
+	// Check if the key square has been overtaken set win for Human
+	if (tempBoard[7][4].getPlayer() == "H")
+	{
+		setWin("H");
+		return true;
+	}
+	else if (getKeypieceLoc("C").size() == 0)
+	{
+		setWin("H");
+		return true;
+	}
+
+	return false;
+}
+
 // TODO: check against key space
 bool Player::keyPieceAttack(string player)
 {
