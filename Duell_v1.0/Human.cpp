@@ -40,13 +40,13 @@ void Human::getCoordinates()
 	do
 	{
 		cout << "Enter X Coordinate of Die to move: ";
-		cin >> x;
-		cout << "Enter Y Coordinate of Die to move: ";
 		cin >> y;
+		cout << "Enter Y Coordinate of Die to move: ";
+		cin >> x;
 		cout << "Enter X Coordinate of Desired End Space: ";
-		cin >> endX;
-		cout << "Enter Y Coordinate of Desired End Space: ";
 		cin >> endY;
+		cout << "Enter Y Coordinate of Desired End Space: ";
+		cin >> endX;
 
 		// If the Y coordinates are not equal there is a lateral movement
 		if (x != endX)
