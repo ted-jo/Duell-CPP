@@ -17,7 +17,6 @@ public:
 	bool validateMove(int, int, int, int, int, string);
 	void executeMove(int, int, int, int, int, string);
 	vector<int> getKeypieceLoc(string);
-	void setWin(string);
 
 	// Computer AI Functions
 	// First Pass

@@ -5,8 +5,6 @@
 
 Player::Player()
 {
-	humanWin = 0;
-	computerWin = 0;
 }
 
 Player::~Player()
@@ -302,18 +300,6 @@ vector<int> Player::getKeypieceLoc(string player)
 	}
 
 	return location;
-}
-
-void Player::setWin(string player)
-{
-	if (player == "C")
-	{
-		computerWin++;
-	}
-	else
-	{
-		humanWin++;
-	}
 }
 
 // TODO: check against key space

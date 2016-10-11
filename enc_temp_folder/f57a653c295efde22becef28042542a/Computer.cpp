@@ -21,7 +21,6 @@ Board * Computer::play()
 		// TODO: Set Win Game
 		cout << "Computer has attacked your Key Piece" << endl;
 		cout << "Computer Wins!" << endl;
-		setWin("C");
 
 	}
 	// Check to see if the Human has any moves that 

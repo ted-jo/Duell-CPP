@@ -183,7 +183,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -211,7 +210,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startX == endX && gameboard[endY][endX].getPlayer() == "C")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -238,7 +236,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -262,7 +259,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -289,7 +285,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startX == endX && gameboard[endY][endX].getPlayer() == "H")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -316,7 +311,6 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 				{
 					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
 					{
-						overtakePiece(endX, endY);
 						return true;
 					}
 					return false;
@@ -355,6 +349,8 @@ bool Board::checkNumSpaces(int startX, int startY, int endX, int endY)
 		return false;
 	}
 }
+
+
 
 
 
