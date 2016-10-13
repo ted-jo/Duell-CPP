@@ -19,6 +19,10 @@ public:
 	vector<int> getKeypieceLoc(string);
 	void setWin(string);
 	bool checkHumanWin();
+	// TODO: Set tempX/Y for checking final overtake piece
+	bool getPath(int, int, int, int, int);
+	bool checkVerticalPath(int, int, int, int, bool);
+	bool checkHorizontalPath(int, int, int, int, bool);
 
 	// Computer AI Functions
 	// First Pass

@@ -76,7 +76,7 @@ void Board::movePieceUp(int x, int y)
 	}
 	else
 	{
-		gameboard[y][x].backwardMove();
+		gameboard[y][x].frontalMove();
 		swap(gameboard[y][x], gameboard[y - 1][x]);
 	}
 
@@ -112,7 +112,7 @@ void Board::movePieceLeft(int x, int y)
 	else
 	{
 		gameboard[y][x].lateralRightMove();
-		swap(gameboard[y][x], gameboard[y][x + 1]);
+		swap(gameboard[y][x], gameboard[y][x - 1]);
 	}
 
 	setBoard(gameboard);
@@ -132,7 +132,7 @@ void Board::movePieceRight(int x, int y)
 	else
 	{
 		gameboard[y][x].lateralLeftMove();
-		swap(gameboard[y][x], gameboard[y][x - 1]);
+		swap(gameboard[y][x], gameboard[y][x + 1]);
 	}
 
 	setBoard(gameboard);
@@ -164,6 +164,7 @@ bool Board::checkOccupiedSpace(int x, int y, string player)
 	return true;
 }
 
+// Returns false if path is blocked, true if clear
 bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 {
 	string player = gameboard[startY][startX].getPlayer();
@@ -245,6 +246,7 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 			return true;
 		}
 	}
+	// Check Computer Path
 	else
 	{
 		// If there is no lateral movement
@@ -271,14 +273,21 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		// Check Y movement then X movement
 		else if (direction == 1)
 		{
-			for (startY--; startY >= endY; startY--)
+			bool first = true;
+			int loopVar = startY;
+			for (loopVar; loopVar >= endY; loopVar--)
 			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				startY--;
 				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
 			}
-
 			for (startX; startX <= endX; startX++)
 			{
 				if (!gameboard[startY][startX].isEmpty())
@@ -297,12 +306,21 @@ bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
 		// Check X movement first then Y movement
 		else
 		{
-			for (startX++; startX <= endX; startX++)
+			bool first = true;
+			int loopVar = startX;
+			for (loopVar; loopVar <= endX; loopVar++)
 			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				startX++;
 				if (!gameboard[startY][startX].isEmpty())
 				{
 					return false;
 				}
+				cout << startX << endl;
 			}
 
 			for (startY; startY >= endY; startY--)

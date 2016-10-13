@@ -8,6 +8,7 @@ public:
 	~Die();
 	vector <int> getDie() { return die; }
 	string getPlayer() { return player; }
+	bool oppositePlayer(string);
 	bool getKeyPiece() { return keypiece; }
 	void setDie(vector<int>);
 	void frontalMove();

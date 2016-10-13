@@ -18,7 +18,8 @@ Board * Human::play()
 	cout << "Its You're Turn!" << endl;
 
 	getCoordinates();
-	executeMove(startX, startY, endX, endY, direction, "H");
+	getPath(startX, startY, endX, endY, direction);
+	//executeMove(startX, startY, endX, endY, direction, "H");
 	return boardObj;
 }
 

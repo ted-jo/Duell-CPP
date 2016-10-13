@@ -6,6 +6,19 @@ Die::~Die()
 {
 }
 
+// If the starting piece is human/computer and the end piece is computer/human return true
+bool Die::oppositePlayer(string stPlayer)
+{
+	if ((stPlayer == "C" && player == "H") || (stPlayer == "H" && player == "C"))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
+}
+
 void Die::setDie(vector<int> newDie)
 {
 	die = newDie;
