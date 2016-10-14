@@ -13,10 +13,12 @@ bool Die::oppositePlayer(string stPlayer)
 	{
 		return true;
 	}
-	else
+	else if ((stPlayer == "C" && player == "C") || (stPlayer == "H" && player == "H"))
 	{
-		return false;
-	}	
+		return true;
+	}
+	// Endspace is not occupied
+	return false;
 }
 
 void Die::setDie(vector<int> newDie)

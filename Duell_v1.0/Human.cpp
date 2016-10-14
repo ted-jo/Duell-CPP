@@ -18,7 +18,7 @@ Board * Human::play()
 	cout << "Its You're Turn!" << endl;
 
 	getCoordinates();
-	getPath(startX, startY, endX, endY, direction);
+	getPath(startX, startY, endX, endY, direction, true);
 	//executeMove(startX, startY, endX, endY, direction, "H");
 	return boardObj;
 }
@@ -50,7 +50,7 @@ void Human::getCoordinates()
 		cin >> endX;
 
 		// If the Y coordinates are not equal there is a lateral movement
-		if (x != endX)
+		if (x != endX && y != endY)
 		{
 			do
 			{
@@ -79,7 +79,7 @@ void Human::getCoordinates()
 		
 	} while (!validInput);
 
-	cout << "You are moving Piece (" << x + 1 << ", " << y + 1 << ")" << " to space (" << endX + 1 << ", " << endY + 1 << ")" << endl;
+	cout << "You are moving Piece (" << y + 1 << ", " << x + 1 << ")" << " to space (" << endY + 1 << ", " << endX + 1 << ")" << endl;
 
 	setCoordinates(x, y, endX, endY, directionInput);
 	

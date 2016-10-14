@@ -78,7 +78,8 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 		validation = false;
 	}
 	// Check if there are any pieces blocking move
-	else if (!boardObj->checkPath(startX, startY, endX, endY, direction))
+	//else if (!boardObj->checkPath(startX, startY, endX, endY, direction))
+	else if(!getPath(startX, startY, endX, endY, direction, false))
 	{
 		cout << "*****************************************************" << endl;
 		cout << "*  Error: Path is Blocked                           *" << endl;
@@ -336,20 +337,31 @@ bool Player::checkHumanWin()
 }
 
 // Checks and executes path
-bool Player::getPath(int startX, int startY, int endX, int endY, int direction)
+bool Player::getPath(int startX, int startY, int endX, int endY, int direction, bool execute)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	string player = tempBoard[startY][startX].getPlayer();
+	string endPlayer = tempBoard[endY][endX].getPlayer();
 
+	// If endspace is occupied by Die of same player path is blocked
+	if (player == endPlayer)
+	{
+		return false;
+	}
 	// If move is strictly forward
 	if (startX == endX)
 	{
 		// If path is clear, execute move and return true
 		if (checkVerticalPath(startX, startY, endX, endY, false))
 		{
-			if (checkVerticalPath(startX, startY, endX, endY, true))
+			if (execute)
 			{
-				return true;
-			}			
+				if (checkVerticalPath(startX, startY, endX, endY, true))
+				{
+					return true;
+				}
+			}	
+			return true;
 		}
 	}
 	// If move is strictly lateral
@@ -358,10 +370,14 @@ bool Player::getPath(int startX, int startY, int endX, int endY, int direction)
 		// If path is clear, execute move and return true
 		if (checkHorizontalPath(startX, startY, endX, endY, false))
 		{
-			if (checkHorizontalPath(startX, startY, endX, endY, true))
+			if (execute)
 			{
-				return true;
+				if (checkHorizontalPath(startX, startY, endX, endY, true))
+				{
+					return true;
+				}
 			}
+			return true;
 		}
 	}
 	// If move is forward then lateral
@@ -372,14 +388,18 @@ bool Player::getPath(int startX, int startY, int endX, int endY, int direction)
 		{
 			if (checkHorizontalPath(startX, endY, endX, endY, false))
 			{
-				// Execute Move
-				if (checkVerticalPath(startX, startY, endX, endY, true))
+				if (execute)
 				{
-					if (checkHorizontalPath(startX, endY, endX, endY, true))
+					// Execute Move
+					if (checkVerticalPath(startX, startY, endX, endY, true))
 					{
-						return true;
+						if (checkHorizontalPath(startX, endY, endX, endY, true))
+						{
+							return true;
+						}
 					}
 				}
+				return true;
 			}
 		}
 	}
@@ -391,14 +411,18 @@ bool Player::getPath(int startX, int startY, int endX, int endY, int direction)
 		{
 			if (checkVerticalPath(endX, startY, endX, endY, false))
 			{
-				// Execute Move
-				if (checkHorizontalPath(startX, startY, endX, endY, true))
+				if (execute)
 				{
-					if (checkVerticalPath(endX, startY, endX, endY, true))
+					// Execute Move
+					if (checkHorizontalPath(startX, startY, endX, endY, true))
 					{
-						return true;
+						if (checkVerticalPath(endX, startY, endX, endY, true))
+						{
+							return true;
+						}
 					}
 				}
+				return true;
 			}
 		}
 	}
@@ -413,12 +437,13 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 	string player = tempBoard[startY][startX].getPlayer();
 	bool first = true;
 	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
-	int tempX, tempY;
+	int tempY;
 	tempY = endY;
-	tempY--;
+	
 
 	if (startY > endY)
 	{
+		tempY++;
 		for (startY; startY > endY; startY--)
 		{
 			// Only check path no execution of move
@@ -430,7 +455,7 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 					continue;
 				}
 				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == --endY && tempBoard[endY][endX].oppositePlayer(player))
+				if (startX == endX && startY == tempY && oppositePlayer)
 				{
 					boardObj->overtakePiece(endX, endY);
 					return true;
@@ -452,6 +477,7 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 	}
 	else if(startY < endY)
 	{
+		tempY--;
 		for (startY; startY < endY; startY++)
 		{
 			if (!execute)
@@ -462,7 +488,7 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 					continue;
 				}
 				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == tempY && tempBoard[endY][endX].oppositePlayer(player))
+				if (startX == endX && startY == tempY && oppositePlayer)
 				{
 					boardObj->overtakePiece(endX, endY);
 					return true;
@@ -490,10 +516,14 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	string player = tempBoard[startY][startX].getPlayer();
+	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
 	bool first = true;
-
+	int tempX;
+	tempX = endX;
+	
 	if (startX > endX)
 	{
+		tempX++;
 		for (startX; startX > endX; startX--)
 		{
 			if (!execute)
@@ -504,7 +534,7 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 					continue;
 				}
 				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == endY && tempBoard[endY][endX].oppositePlayer(player))
+				if (startX == endX && startY == endY && oppositePlayer)
 				{
 					boardObj->overtakePiece(endX, endY);
 					return true;
@@ -526,6 +556,7 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 	}
 	else if (startX < endX)
 	{
+		tempX--;
 		for (startX; startX < endX; startX++)
 		{
 			if (!execute)
@@ -536,7 +567,7 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 					continue;
 				}
 				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == endY && tempBoard[endY][endX].oppositePlayer(player))
+				if (startX == endX && startY == endY && oppositePlayer)
 				{
 					boardObj->overtakePiece(endX, endY);
 					return true;
@@ -731,12 +762,12 @@ bool Player::executeBlock(int endX, int endY)
 				if (boardObj->checkNumSpaces(x, y, endX, endY))
 				{
 					// TODO!!!!!!!!!!!!!!
-					direction = getPath(x, y, endX, endY, 1);
-					if (direction != -1)
-					{
-						executeMove(x, y, endX, endY, direction, "C");
-						return true;
-					}
+					//direction = getPath(x, y, endX, endY, 1);
+					//if (direction != -1)
+					//{
+					//	executeMove(x, y, endX, endY, direction, "C");
+					//	return true;
+					//}
 				}
 
 				//if (boardObj->checkNumSpaces(x, y, endX, endY))
