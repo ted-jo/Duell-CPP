@@ -93,185 +93,6 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 	return validation;
 }
 
-void Player::executeMove(int startX, int startY, int endX, int endY, int direction, string player)
-{
-	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-
-	if (player == "H")
-	{
-		// No Lateral Movement
-		if (direction == 0)
-		{
-			for (startY; startY < endY; startY++)
-			{
-				int tempY = endY;
-				if (startY == --tempY && tempBoard[endY][endX].getPlayer() == "C")
-				{
-					boardObj->overtakePiece(endX, endY);
-				}
-
-				boardObj->movePieceUp(startX, startY);
-			}
-		}
-		// First movement forward
-		else if (direction == 1)
-		{
-			// Move forward until the end Y location
-			for (startY; startY < endY; startY++)
-			{
-				boardObj->movePieceUp(startX, startY);
-			}
-			// Move Lateral to the end X location
-			// If start X > end X -> move left
-			if (startX > endX)
-			{
-				for (startX; startX > endX; startX--)
-				{
-					int tempX = endX;
-					if (startY == ++tempX && tempBoard[endY][endX].getPlayer() == "C")
-					{
-						boardObj->overtakePiece(endX, endY);
-					}
-
-					boardObj->movePieceLeft(startX, endY);
-				}
-			}
-			else
-			{
-				for (startX; startX < endX; startX++)
-				{
-					int tempX = endX;
-					if (startY == --tempX && tempBoard[endY][endX].getPlayer() == "C")
-					{
-						boardObj->overtakePiece(endX, endY);
-					}
-
-					boardObj->movePieceRight(startX, startY);
-				}
-			}
-		}
-		// First Movement Lateral
-		else if(direction == 2)
-		{
-			// Move Lateral to the end X location
-			// If start X > end X -> move left
-			if (startX > endX)
-			{
-				for (startX; startX > endX; startX--)
-				{
-					boardObj->movePieceLeft(startX, endY);
-				}
-			}
-			else
-			{
-				for (startX; startX < endX; startX++)
-				{
-					boardObj->movePieceRight(startX, startY);
-				}
-			}
-
-			// Move forward until the end Y location
-			for (startY; startY < endY; startY++)
-			{
-				int tempY = endY;
-				if (startY == --tempY && tempBoard[endY][endX].getPlayer() == "C")
-				{
-					boardObj->overtakePiece(endX, endY);
-				}
-
-				boardObj->movePieceUp(startX, startY);
-			}
-		}
-	}
-	// Execute Computer Move
-	else
-	{
-		// No Lateral Movement
-		if (direction == 0)
-		{
-			for (startY; startY > endY; startY--)
-			{
-				int tempY = endY;
-				if (startY == ++tempY && tempBoard[endY][endX].getPlayer() == "H")
-				{
-					boardObj->overtakePiece(endX, endY);
-				}
-
-				boardObj->movePieceDown(startX, startY);
-			}
-		}
-		// First movement forward
-		else if (direction == 1)
-		{
-			// Move forward until the end Y location
-			for (startY; startY > endY; startY--)
-			{
-				boardObj->movePieceUp(startX, startY);
-			}
-			// Move Lateral to the end X location
-			// If start X > end X -> move left
-			if (startX > endX)
-			{
-				for (startX; startX > endX; startX--)
-				{
-					int tempX = endX;
-					if (startY == ++tempX && tempBoard[endY][endX].getPlayer() == "H")
-					{
-						boardObj->overtakePiece(endX, endY);
-					}
-
-					boardObj->movePieceLeft(startX, endY);
-				}
-			}
-			else
-			{
-				for (startX; startX < endX; startX++)
-				{
-					int tempX = endX;
-					if (startY == --tempX && tempBoard[endY][endX].getPlayer() == "H")
-					{
-						boardObj->overtakePiece(endX, endY);
-					}
-
-					boardObj->movePieceRight(startX, startY);
-				}
-			}
-		}
-		// First Movement Lateral
-		else if (direction == 2)
-		{
-			// Move Lateral to the end X location
-			// If start X > end X -> move left
-			if (startX > endX)
-			{
-				for (startX; startX > endX; startX--)
-				{
-					boardObj->movePieceLeft(startX, endY);
-				}
-			}
-			else
-			{
-				for (startX; startX < endX; startX++)
-				{
-					boardObj->movePieceRight(startX, startY);
-				}
-			}
-
-			// Move forward until the end Y location
-			for (startY; startY > endY; startY--)
-			{
-				int tempY = endY;
-				if (startY == ++tempY && tempBoard[endY][endX].getPlayer() == "H")
-				{
-					boardObj->overtakePiece(endX, endY);
-				}
-
-				boardObj->movePieceDown(startX, startY);
-			}
-		}
-	}
-}
-
 // Function finds either the Human or computer keypiece and
 // stores the coordinates in a vector
 vector<int> Player::getKeypieceLoc(string player)
@@ -334,6 +155,27 @@ bool Player::checkHumanWin()
 	}
 
 	return false;
+}
+
+int Player::getDirection(int startX, int startY, int endX, int endY)
+{
+	// Check forward then horizontal path and return 1
+	if (checkVerticalPath(startX, startY, endX, endY, false))
+	{
+		if (checkHorizontalPath(startX, endY, endX, endY, false))
+		{
+			return 1;
+		}
+	}
+	// Check  lateral then forward and return 2
+	if (checkHorizontalPath(startX, startY, endX, endY, false))
+	{
+		if (checkVerticalPath(endX, startY, endX, endY, false))
+		{
+			return 2;
+		}
+	}
+	return 0;
 }
 
 // Checks and executes path
@@ -611,25 +453,25 @@ bool Player::keyPieceAttack(string player)
 				{
 					// Check if the Computer Piece is the correct
 					// number of spaces from the Human Key Piece
-					if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
-					{
-						if (boardObj->checkPath(x, y, endX, endY, 0) == true)
-						{
-							executeMove(x, y, endX, endY, 0, "C");
-							return true;
-						}
-						else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
-						{
-							executeMove(x, y, endX, endY, 1, "C");
-							return true;
-						}
-						else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
-						{
-							executeMove(x, y, endX, endY, 2, "C");
-							return true;
-						}
+					//if (boardObj->checkNumSpaces(x, y, endX, endY) == true)
+					//{
+					//	if (boardObj->checkPath(x, y, endX, endY, 0) == true)
+					//	{
+					//		executeMove(x, y, endX, endY, 0, "C");
+					//		return true;
+					//	}
+					//	else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+					//	{
+					//		executeMove(x, y, endX, endY, 1, "C");
+					//		return true;
+					//	}
+					//	else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
+					//	{
+					//		executeMove(x, y, endX, endY, 2, "C");
+					//		return true;
+					//	}
 
-					}
+					//}
 				}
 			}
 			else
@@ -696,50 +538,55 @@ bool Player::protectKeyPiece()
 				{
 					// If check path is true, then Human has a winning move
 					// Execute block and return true
-					if (boardObj->checkPath(x, y, endX, endY, 0) || boardObj->checkPath(x, y, endX, endY, 2))
+					if (getPath(x, y, endX, endY, 0, false) || getPath(x, y, endX, endY, 2, false))
 					{
-						// For a forward or lateral->forward attack set --endY
-						// So block manuever is executed one space below keypiece
-						if (executeBlock(endX, --endY))
+						if (endY > y)
 						{
-							return true;
+							endY--;
+							// For a forward or lateral->forward attack set --endY
+							// So block manuever is executed one space below keypiece
+							if (executeBlock(endX, endY))
+							{
+								return true;
+							}
 						}
+						else if (endY < y)
+						{
+							endY++;
+							if (executeBlock(endX, endY))
+							{
+								return true;
+							}
+						}
+
 					}
 					// For a forward->lateral attack
 					// Check if Human will be attacking from left or right 
 					// Execute Block on appropriate space
-					else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
+					else if (getPath(x, y, endX, endY, 1, false))
 					{
 						// Block Space to left of Keypiece
 						if (endX > x)
 						{
 							--endX;
-							if (checkOOB(endX, endY))
+							if (executeBlock(endX, endY))
 							{
-								if (executeBlock(endX, endY))
-								{
-									return true;
-								}
+								return true;
 							}
 						}
-						else
+						else if (endX < x)
 						{
 							++endX;
-							if (checkOOB(endX, endY))
+							if (executeBlock(endX, endY))
 							{
-								if (executeBlock(endX, endY))
-								{
-									return true;
-								}
+								return true;
 							}
 						}
-
 					}
 				}
 			}
 		}
 	}
-
 	return false;
 }
 
@@ -761,33 +608,16 @@ bool Player::executeBlock(int endX, int endY)
 			{
 				if (boardObj->checkNumSpaces(x, y, endX, endY))
 				{
-					// TODO!!!!!!!!!!!!!!
-					//direction = getPath(x, y, endX, endY, 1);
-					//if (direction != -1)
-					//{
-					//	executeMove(x, y, endX, endY, direction, "C");
-					//	return true;
-					//}
+					direction = getDirection(x, y, endX, endY);
+					if (direction != 0)
+					{
+						if (getPath(x, y, endX, endY, direction, true))
+						{
+							return true;
+						}
+						
+					}
 				}
-
-				//if (boardObj->checkNumSpaces(x, y, endX, endY))
-				//{
-				//	if (boardObj->checkPath(x, y, endX, endY, 0) == true)
-				//	{
-				//		executeMove(x, y, endX, endY, 0, "C");
-				//		return true;
-				//	}
-				//	else if (boardObj->checkPath(x, y, endX, endY, 1) == true)
-				//	{
-				//		executeMove(x, y, endX, endY, 1, "C");
-				//		return true;
-				//	}
-				//	else if (boardObj->checkPath(x, y, endX, endY, 2) == true)
-				//	{
-				//		executeMove(x, y, endX, endY, 2, "C");
-				//		return true;
-				//	}
-				//}
 			}
 		}
 	}
