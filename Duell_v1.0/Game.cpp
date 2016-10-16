@@ -27,15 +27,15 @@ void Game::round()
 		boardViewObj->ViewBoard(boardObj->GetBoard());
 		humanObj->setBoard(boardObj);
 		setBoard(humanObj->play());
-		//if (humanObj->checkHumanWin())
-		//{
-		//	cout << "You Win!" << endl;
-		//	setEndGame();
-		//	break;
-		//}
-		//boardViewObj->ViewBoard(boardObj->GetBoard());
-		//computerObj->setBoard(boardObj);
-		//setBoard(computerObj->play());
+		if (humanObj->checkHumanWin())
+		{
+			cout << "You Win!" << endl;
+			setEndGame();
+			break;
+		}
+		boardViewObj->ViewBoard(boardObj->GetBoard());
+		computerObj->setBoard(boardObj);
+		setBoard(computerObj->play());
 	}
 }
 

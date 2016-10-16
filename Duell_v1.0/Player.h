@@ -22,8 +22,8 @@ public:
 	bool getPath(int, int, int, int, int, bool);
 	bool checkVerticalPath(int, int, int, int, bool);
 	bool checkHorizontalPath(int, int, int, int, bool);
+	void displayMove(int, int, int, int, int, int);
 
-	// TODO: Finish fixing AI Passes
 
 	// Computer AI Functions
 	// First Pass
@@ -33,12 +33,10 @@ public:
 	bool executeBlock(int, int);
 	// Third Pass
 	// Check for move that will overtake an opponent's piece
-	bool checkOvertake(int, int, int, int);
+	bool checkOvertake();
 	// Fourth Pass Move piece that can get closest
 	// to opponent keypiece/space
-	void findBestMove();
-	vector<int> checkBestMove(int, int);
-	int executeClosestMove(int, int, int, int);
+	bool executeBestMove();
 protected:
 	Board * boardObj;
 private:

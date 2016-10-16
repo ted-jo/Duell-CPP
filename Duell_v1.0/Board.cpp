@@ -68,16 +68,19 @@ void Board::setBoard(vector<vector<Die>> board)
 void Board::movePieceUp(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
+	Die * newDie = new Die();
 
 	if (player == "H")
 	{
 		gameboard[y][x].frontalMove();
-		swap(gameboard[y][x], gameboard[y + 1][x]);
+		gameboard[y + 1][x] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 	else
 	{
 		gameboard[y][x].frontalMove();
-		swap(gameboard[y][x], gameboard[y - 1][x]);
+		gameboard[y + 1][x] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 
 
@@ -87,15 +90,20 @@ void Board::movePieceUp(int x, int y)
 void Board::movePieceDown(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
+	Die * newDie = new Die();
+
 	if (player == "H")
 	{
 		gameboard[y][x].backwardMove();
-		swap(gameboard[y][x], gameboard[y - 1][x]);
+		gameboard[y - 1][x] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 	else
 	{
 		gameboard[y][x].frontalMove();
-		swap(gameboard[y][x], gameboard[y - 1][x]);
+		gameboard[y - 1][x] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
+
 	}
 
 	setBoard(gameboard);
@@ -104,15 +112,19 @@ void Board::movePieceDown(int x, int y)
 void Board::movePieceLeft(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
+	Die * newDie = new Die();
+
 	if (player == "H")
 	{
 		gameboard[y][x].lateralLeftMove();
-		swap(gameboard[y][x], gameboard[y][x - 1]);
+		gameboard[y][x - 1] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 	else
 	{
 		gameboard[y][x].lateralRightMove();
-		swap(gameboard[y][x], gameboard[y][x - 1]);
+		gameboard[y][x - 1] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 
 	setBoard(gameboard);
@@ -124,28 +136,24 @@ void Board::movePieceLeft(int x, int y)
 void Board::movePieceRight(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
+	Die * newDie = new Die();
+
 	if (player == "H")
 	{
 		gameboard[y][x].lateralRightMove();
-		swap(gameboard[y][x], gameboard[y][x + 1]);
+		gameboard[y][x + 1] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 	else
 	{
 		gameboard[y][x].lateralLeftMove();
-		swap(gameboard[y][x], gameboard[y][x + 1]);
+		gameboard[y][x + 1] = gameboard[y][x];
+		gameboard[y][x] = *newDie->createBlankDie(newDie);
 	}
 
 	setBoard(gameboard);
 }
 
-void Board::overtakePiece(int x, int y)
-{
-	Die * newDie = new Die();
-
-	cout << gameboard[y][x].displayDie() << " has been overtaken and removed from play" << endl;
-
-	gameboard[y][x] = *newDie->createBlankDie(newDie);	
-}
 
 
 // TODO: implement this during coodinate entry.

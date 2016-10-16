@@ -27,16 +27,19 @@ Board * Computer::play()
 	// Check to see if the Human has any moves that 
 	// will overtake the AI's keypiece
 	// Initiate a block if true
-	else if (keyPieceAttack("H"))
+	else if (keyPieceAttack("H") && protectKeyPiece())
 	{
-		cout << "Human has finishing move initiate block" << endl;
-		protectKeyPiece();
+		cout << "Human has finishing move, initiate block" << endl;
 	}
-	else
+	else if (checkOvertake())
+	{
+		cout << "Computer executed a move to overtake a human piece";
+	}
+	else if(executeBestMove())
 	{
 		// No winning or blocking moves
 		// Execute best move available
-		findBestMove();
+		cout << "Computer excecuted best possible move" << endl;
 	}
 
 

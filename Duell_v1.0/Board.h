@@ -11,7 +11,6 @@ public:
 	void movePieceDown(int, int);
 	void movePieceLeft(int, int);
 	void movePieceRight(int, int);
-	void overtakePiece(int, int);
 	bool checkOccupiedSpace(int, int, string);
 	bool checkPath(int, int, int, int, int);
 	bool checkNumSpaces(int, int, int, int);
