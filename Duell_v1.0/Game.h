@@ -13,6 +13,9 @@ public:
 	void setEndGame();
 	Board getBoard() { return * boardObj; }
 	void setBoard(Board *);
+	void saveGame(string);
+	bool savePrompt(string);
+	void loadGame();
 private:
 	Human * humanObj;
 	Computer * computerObj;

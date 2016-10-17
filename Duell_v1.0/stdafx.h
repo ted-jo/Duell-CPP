@@ -20,6 +20,7 @@
 #include <string>
 #include <windows.h>
 #include <vector>
+#include <fstream>
 
 
 using namespace std;

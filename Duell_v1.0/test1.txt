@@ -1,0 +1,15 @@
+Board:
+ 0 H15H21H62H11H62H21H15H56
+ 0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0 
+ 0 H15 0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0 
+ 0  0  0  0  0  0  0  0  0 
+C56C15C21C62C11C62C21C15C56
+
+Computer Wins: 0
+
+Human Wins: 0
+
+Next Player: Computer

@@ -16,6 +16,7 @@ public:
 	bool validateMove(int, int, int, int, int, string);
 	vector<int> getKeypieceLoc(string);
 	void setWin(string);
+	virtual int getWin() = 0;
 	bool checkHumanWin();
 
 	int getDirection(int, int, int, int);
@@ -39,8 +40,8 @@ public:
 	bool executeBestMove();
 protected:
 	Board * boardObj;
-private:
 	int humanWin;
 	int computerWin;
+
 };
 

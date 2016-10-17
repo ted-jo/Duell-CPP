@@ -7,5 +7,6 @@ public:
 	Computer();
 	~Computer();
 	Board * play();
+	int getWin() { return computerWin; }
 };
 

@@ -522,7 +522,7 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	}
 }
 
-// TODO: check against key space
+// TODO: check against key space fore human
 bool Player::keyPieceAttack(string player)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();

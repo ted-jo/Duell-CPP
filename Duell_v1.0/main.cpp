@@ -70,22 +70,6 @@ int main(int argc, char *argv[])
 	} while (choice != 4);
 
 
-	//Board b;
-	//boardView v;
-	//vector<vector<Die>> gameboard = b.GetBoard();
-	//v.ViewBoard(gameboard);
-	//cout << "Choose X Coordinate of Die to move: ";
-	//cin >> x;
-	//cout << "Choose Y Coordinate of Die to move: ";
-	//cin >> y;
-	//gameboard = b.movePiece(x, y, gameboard);
-	//v.ViewBoard(gameboard);
-
-
-	
-
-
-
 	cout << endl;
 	system("PAUSE");
 	return 0;
