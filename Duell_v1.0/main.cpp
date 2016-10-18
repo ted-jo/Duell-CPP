@@ -59,7 +59,12 @@ int main(int argc, char *argv[])
 			// Start a new Tournament
 			break;
 		case 3 :
+		{
 			// Load a Saved Game
+			Game * game = new Game();
+			game->loadGame();
+			break;
+		}
 		case 4 :
 			// Quit Game
 			break;

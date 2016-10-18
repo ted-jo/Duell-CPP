@@ -75,6 +75,81 @@ bool Game::savePrompt(string nextPlayer)
 	return false;
 }
 
+void Game::loadGame()
+{
+	fstream file;
+	string fileName, line, nextPlayer, computerWins, humanWins;;
+	vector<vector<string>> fileVec;
+	bool boardLoop = true;
+	int i = 0;
+
+	do
+	{
+		cout << "Enter file name ex. game1" << endl;
+		cin >> fileName;
+		fileName += ".txt";
+		file.open(fileName);
+	} while (!file.is_open());
+
+	// Skip First line containing Board:
+	getline(file, line);
+	while (getline(file, line, '\n')) 
+	{
+		int n = 0;
+		istringstream iss(line);
+		string item, temp;
+		vector<string> row;
+
+		if (fileVec.size() == 8)
+		{
+			boardLoop = false;
+		}
+		if (boardLoop == true)
+		{
+			while (iss >> item)
+			{
+				row.push_back(item);
+			}
+			fileVec.push_back(row);
+		}
+		if (boardLoop == false)
+		{
+			while (iss >> item)
+			{
+				if (item == "Computer")
+				{
+					if (iss >> temp >> item)
+					{
+						computerWins = item;
+					}
+				}
+				else if (item == "Human")
+				{
+					if (iss >> temp >> item)
+					{
+						humanWins = item;
+					}
+				}
+				else if (item == "Next")
+				{
+					if (iss >> temp >> item)
+					{
+						nextPlayer = item;
+					}
+				}
+			}
+			
+		}
+		
+
+	}
+
+	cout << computerWins << endl;
+	cout << humanWins << endl;
+	cout << nextPlayer << endl;
+
+}
+
 void Game::round()
 {
 	bool first = true;

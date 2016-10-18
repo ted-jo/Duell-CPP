@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <vector>
 #include <fstream>
+#include <sstream>
 
 
 using namespace std;

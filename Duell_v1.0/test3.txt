@@ -8,7 +8,7 @@ C56 C15 C21 C62 C11 C62 C21 C15 C56
  0   0   0   0   0   0   0   0   0  
  0  H15 H21 H62 H11 H62 H21 H15 H56 
 
-Computer Wins: 0
+Computer Wins: 3
 
 Human Wins: 0
 
