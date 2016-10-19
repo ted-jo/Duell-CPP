@@ -80,8 +80,8 @@ void Game::loadGame()
 	fstream file;
 	string fileName, line, nextPlayer, computerWins, humanWins;;
 	vector<vector<string>> fileVec;
+	vector<vector<Die>> gameBoard;
 	bool boardLoop = true;
-	int i = 0;
 
 	do
 	{

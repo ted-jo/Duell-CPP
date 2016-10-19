@@ -138,6 +138,155 @@ Die* Die::createStartingDie(Die * d, int topNum, int rightNum, string player)
 	return d;
 }
 
+// Create die based off given top number for loading game
+// Die[top, bottom, left, right, front, back]
+Die * Die::dieSwitch(int topNum, int rightNum, string player)
+{
+	Die * d;
+
+	switch (topNum) 
+	{
+	case 1:
+		switch (rightNum) 
+		{
+		case 1:
+			d = createDie(topNum, rightNum, 1, 1, player);
+			break;
+		case 2:
+			d = createDie(topNum, rightNum, 3, 4, player);
+			break;
+		case 3:
+			d = createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 4:
+			d = createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 5:
+			d = createDie(topNum, rightNum, 4, 3, player);
+			break;
+		}
+		break;
+	case 2:
+		switch (rightNum)
+		{
+		case 1:
+			d = createDie(topNum, rightNum, 4, 3, player);
+			break;
+		case 3:
+			d = createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 4:
+			d = createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 6:
+			d = createDie(topNum, rightNum, 3, 4, player);
+			break;
+		}
+		break;
+	case 3:
+		switch (rightNum)
+		{
+		case 1:
+			d = createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 2:
+			d = createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 5:
+			d = createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 6:
+			d = createDie(topNum, rightNum, 5, 2, player);
+			break;
+		}
+		break;
+	case 4:
+		switch (rightNum)
+		{
+		case 1:
+			d = createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 2:
+			d = createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 5:
+			d = createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 6:
+			d = createDie(topNum, rightNum, 2, 5, player);
+			break;
+		}
+		break;
+	case 5:
+		switch (rightNum)
+		{
+		case 1:
+			d = createDie(topNum, rightNum, 3, 4, player);
+			break;
+		case 3:
+			d = createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 4:
+			d = createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 6:
+			d = createDie(topNum, rightNum, 4, 3, player);
+			break;
+		}
+		break;
+	case 6:
+		switch (rightNum)
+		{
+		case 2:
+			d = createDie(topNum, rightNum, 4, 3, player);
+			break;
+		case 3:
+			d = createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 4:
+			d = createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 5:
+			d = createDie(topNum, rightNum, 3, 4, player);
+			break;
+		}
+		break;
+	}
+
+	return d;
+}
+
+Die * Die::createDie(int topNum, int rightNum, int frontNum, int backNum, string player)
+{
+	Die * d = new Die();
+
+	// When creating a key piece set the keypiece bool to true
+	if (topNum == 1 && rightNum == 1)
+	{
+		d->die[0] = topNum;
+		d->die[1] = topNum;
+		d->die[2] = topNum;
+		d->die[3] = topNum;
+		d->die[4] = topNum;
+		d->die[5] = topNum;
+		d->player = player;
+		d->keypiece = true;
+	}
+	else
+	{
+		d->die[0] = topNum;
+		d->die[1] = 7 - topNum;
+		d->die[2] = 7 - rightNum;
+		d->die[3] = rightNum;
+		d->die[4] = frontNum;
+		d->die[5] = backNum;
+		d->player = player;
+		d->keypiece = false;
+	}
+
+	return d;
+}
+
 Die* Die::createBlankDie(Die * d)
 {
 		d->die[0] = 0;
