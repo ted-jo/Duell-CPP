@@ -18,6 +18,7 @@ public:
 	void setWin(string);
 	virtual int getWin() = 0;
 	bool checkHumanWin();
+	bool checkComputerWin();
 
 	int getDirection(int, int, int, int);
 	bool getPath(int, int, int, int, int, bool);

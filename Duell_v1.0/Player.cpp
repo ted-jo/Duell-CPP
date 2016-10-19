@@ -157,6 +157,25 @@ bool Player::checkHumanWin()
 	return false;
 }
 
+bool Player::checkComputerWin()
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+
+	// Check if the key square has been overtaken set win for Human
+	if (tempBoard[0][4].getPlayer() == "C")
+	{
+		setWin("C");
+		return true;
+	}
+	else if (getKeypieceLoc("H").size() == 0)
+	{
+		setWin("C");
+		return true;
+	}
+
+	return false;
+}
+
 int Player::getDirection(int startX, int startY, int endX, int endY)
 {
 	if (startX == endX)

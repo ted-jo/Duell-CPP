@@ -150,17 +150,44 @@ void Game::loadGame()
 
 }
 
-void Game::round()
+
+void Game::round(string player)
 {
 	bool first = true;
 	while (endGame == false)
 	{
-		if (first)
+		// If the human player goes first execute in this order
+		if (player == "Human")
 		{
-			first = false;
+			// Don't ask to save on the first iteration of loop
+			if (first)
+			{
+				first = false;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				humanObj->setBoard(boardObj);
+				setBoard(humanObj->play());
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				if (savePrompt("Computer"))
+				{
+					break;
+				}
+				computerObj->setBoard(boardObj);
+				setBoard(computerObj->play());
+				continue;
+			}
 			boardViewObj->ViewBoard(boardObj->GetBoard());
+			if (savePrompt("Human"))
+			{
+				break;
+			}
 			humanObj->setBoard(boardObj);
 			setBoard(humanObj->play());
+			if (humanObj->checkHumanWin())
+			{
+				cout << "You Win!" << endl;
+				setEndGame();
+				break;
+			}
 			boardViewObj->ViewBoard(boardObj->GetBoard());
 			if (savePrompt("Computer"))
 			{
@@ -168,40 +195,102 @@ void Game::round()
 			}
 			computerObj->setBoard(boardObj);
 			setBoard(computerObj->play());
-			continue;
 		}
-		boardViewObj->ViewBoard(boardObj->GetBoard());
-		if (savePrompt("Human"))
+		else
 		{
-			break;
+			// Don't ask to save on the first iteration of loop
+			if (first)
+			{
+				first = false;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				computerObj->setBoard(boardObj);
+				setBoard(computerObj->play());
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				if (savePrompt("Human"))
+				{
+					break;
+				}
+				humanObj->setBoard(boardObj);
+				setBoard(humanObj->play());
+				continue;
+			}
+			boardViewObj->ViewBoard(boardObj->GetBoard());
+			if (savePrompt("Computer"))
+			{
+				break;
+			}
+			computerObj->setBoard(boardObj);
+			setBoard(computerObj->play());
+			if (computerObj->checkComputerWin())
+			{
+				cout << "Computer Wins!" << endl;
+				setEndGame();
+				break;
+			}
+			boardViewObj->ViewBoard(boardObj->GetBoard());
+			if (savePrompt("Human"))
+			{
+				break;
+			}
+			humanObj->setBoard(boardObj);
+			setBoard(humanObj->play());
 		}
-		humanObj->setBoard(boardObj);
-		setBoard(humanObj->play());
-		if (humanObj->checkHumanWin())
-		{
-			cout << "You Win!" << endl;
-			setEndGame();
-			break;
-		}
-		boardViewObj->ViewBoard(boardObj->GetBoard());
-		if (savePrompt("Computer"))
-		{
-			break;
-		}
-		computerObj->setBoard(boardObj);
-		setBoard(computerObj->play());		
+	
 	}
 }
 
 void Game::startGame()
 {
-	// TODO: Add coin flip to see which player goes first
-	bool first = true;
+	// Get who's playing first
+	string player = firstPlayer();
 	while (!endGame)
 	{
-		round();
+		round(player);
 		setEndGame();
 	}
+}
+
+string Game::firstPlayer()
+{
+	int human, computer;
+	string player;
+	// Seed rand() with the current time
+	srand(time(NULL));
+
+	do
+	{
+
+		// Select a random number between 1-6 whoever has the higher number goes first
+		human = (rand() % 6 + 1);
+		computer = (rand() % 6 + 1);
+		cout << "          +=================================================+" << endl;
+		cout << "          |        Roll a die to see who goes first!        |" << endl;
+		cout << "          |                                                 |" << endl;
+		cout << "          |        You rolled a " << human <<"                           |" << endl;
+		cout << "          |        Computer rolled a " << computer <<"                      |" << endl;
+		cout << "          |                                                 |" << endl;
+		if (human > computer)
+		{
+			cout << "          |        You go first!                            |" << endl;
+			cout << "          +=================================================+" << endl;
+			player = "Human";
+			return player;
+		}
+
+		if (computer > human)
+		{
+			cout << "          |        Computer goes first                      |" << endl;
+			cout << "          +=================================================+" << endl;
+			player = "Computer";
+			return player;
+		}
+		if (computer == human)
+		{
+			cout << "          |        It's a tie!                              |" << endl;
+			cout << "          |        Roll again...                            |" << endl;
+			cout << "          +=================================================+" << endl;
+		}
+	} while (human == computer);
 }
 
 void Game::setEndGame()

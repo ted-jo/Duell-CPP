@@ -8,7 +8,7 @@ class Game
 public:
 	Game();
 	~Game();
-	void round();
+	void round(string);
 	void startGame();
 	void setEndGame();
 	Board getBoard() { return * boardObj; }
@@ -16,6 +16,7 @@ public:
 	void saveGame(string);
 	bool savePrompt(string);
 	void loadGame();
+	string firstPlayer();
 private:
 	Human * humanObj;
 	Computer * computerObj;
