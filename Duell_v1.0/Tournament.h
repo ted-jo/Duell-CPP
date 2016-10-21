@@ -2,12 +2,13 @@
 #include "Game.h"
 
 
+
 #pragma once
 class Tournament
 {
 public:
 	Tournament();
-	~Tournament() { delete gameObj; }
+	~Tournament();
 	//void setComputerWins(int);
 	//void setHumanWins(int);
 	//int getHumanWins() { return humanWins; }
@@ -15,9 +16,13 @@ public:
 	void displayWinner();
 	void startTournament();
 	bool playAgain();
+	void loadGame();
+	void startFromLoad(string);
+	void setBoard();
 private:
 	int computerWins;
 	int humanWins;
+	Board * boardObj;
 	Game * gameObj;
 };
 

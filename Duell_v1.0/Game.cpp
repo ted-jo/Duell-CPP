@@ -6,7 +6,6 @@ Game::Game()
 {
 	humanObj = new Human();
 	computerObj = new Computer();
-	boardObj = new Board();
 	boardViewObj = new boardView();
 	humanWin = 0;
 	computerWin = 0;
@@ -70,6 +69,7 @@ bool Game::savePrompt(string nextPlayer)
 	do
 	{
 		cout << "****************************************************" << endl;
+		cout << "*              ~~ Save & Exit? ~~                  *" << endl;
 		cout << "*     Would you like to save and exit the game?    *" << endl;
 		cout << "*     Enter 'y' for yes or 'n' for no              *" << endl;
 		cout << "****************************************************" << endl;
@@ -92,115 +92,7 @@ bool Game::savePrompt(string nextPlayer)
 
 }
 
-void Game::loadGame()
-{
-	fstream file;
-	string fileName, line, nextPlayer, computerWinsStr, humanWinsStr, tmp, player, topStr, rightStr;
-	int topNum, rightNum, computerWins, humanWins;
-	int iter = 0;
-	vector<vector<string>> fileVec;
-	vector<vector<Die>> gameBoard(8, vector <Die>(9));
-	bool boardLoop = true;
 
-	do
-	{
-		cout << "Enter file name ex. game1" << endl;
-		cin >> fileName;
-		fileName += ".txt";
-		file.open(fileName);
-	} while (!file.is_open());
-
-	// Skip First line containing Board:
-	getline(file, line);
-	while (getline(file, line, '\n')) 
-	{
-		int n = 0;
-		istringstream iss(line);
-		string item, temp;
-		vector<string> row;
-
-		if (fileVec.size() == 8)
-		{
-			boardLoop = false;
-		}
-		if (boardLoop == true)
-		{
-			while (iss >> item)
-			{
-				row.push_back(item);
-			}
-			fileVec.push_back(row);
-		}
-		if (boardLoop == false)
-		{
-			while (iss >> item)
-			{
-				if (item == "Computer")
-				{
-					if (iss >> temp >> item)
-					{
-						computerWinsStr = item;
-					}
-				}
-				else if (item == "Human")
-				{
-					if (iss >> temp >> item)
-					{
-						humanWinsStr = item;
-					}
-				}
-				else if (item == "Next")
-				{
-					if (iss >> temp >> item)
-					{
-						nextPlayer = item;
-					}
-				}
-			}
-			
-		}
-		
-
-	}
-
-	// Loop through the 2D vector containing the 
-	// gameboard of strings
-	for (int i = 7; i >= 0; i--)
-	{
-		for (int j = 0; j < fileVec[i].size(); j++)
-		{
-			// Save the full string of the Die in Temp
-			tmp = fileVec[i][j];
-			// If the space contains a piece
-			if (tmp != "0")
-			{
-				// Grab the player from the first character of the string
-				player = tmp.substr(0, 1);
-				// Grab the top number from the second character
-				topStr = tmp.substr(1, 1);
-				// Grab the right number from the third character
-				rightStr = tmp.substr(2, 1);
-				// Convert from string to int
-				istringstream(topStr) >> topNum;
-				istringstream(rightStr) >> rightNum;
-				// Run die switch function to create the Die* to fill the board
-				gameBoard[iter][j] = *boardObj->dieSwitch(topNum, rightNum, player);
-			}			
-		}
-		iter++;
-	}
-
-	// Convert the number of wins to an int and set appropriate variables
-	istringstream(computerWinsStr) >> computerWins;
-	istringstream(humanWinsStr) >> humanWins;
-	boardObj->setBoard(gameBoard);
-	setBoard(boardObj);
-	setWinLoad(computerWins, humanWins);
-
-	// Start the game
-	round(nextPlayer);
-
-}
 
 /* *********************************************************************
 Function Name: round
@@ -244,8 +136,13 @@ void Game::round(string player)
 			setBoard(humanObj->play());
 			if (setWin("H"))
 			{
-				cout << "You Win!" << endl;
-				cout << "Congrats, want a medal?" << endl;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				cout << endl << endl;
+				cout << "*****************************************" << endl;
+				cout << "*             You Win!                  *" << endl;
+				cout << "*       Congrats, want a medal?         *" << endl;
+				cout << "*****************************************" << endl;
+				cout << endl;
 				setEndGame();
 				break;
 			}
@@ -258,8 +155,13 @@ void Game::round(string player)
 			setBoard(computerObj->play());
 			if (setWin("C"))
 			{
-				cout << "You lose..." << endl;
-				cout << "Don't worry we won't tell anyone" << endl;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				cout << endl << endl;
+				cout << "*****************************************" << endl;
+				cout << "*               You lose...             *" << endl;
+				cout << "*     Don't worry we won't tell anyone  *" << endl;
+				cout << "*****************************************" << endl;
+				cout << endl;
 				setEndGame();
 				break;
 			}
@@ -276,8 +178,13 @@ void Game::round(string player)
 			setBoard(computerObj->play());
 			if (setWin("C"))
 			{
-				cout << "Well that's embarassing" << endl;
-				cout << "You lose..." << endl;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				cout << endl << endl;
+				cout << "*****************************************" << endl;
+				cout << "*        Well that's embarassing        *" << endl;
+				cout << "*               You lose...             *" << endl;
+				cout << "*****************************************" << endl;
+				cout << endl;
 				setEndGame();
 				break;
 			}
@@ -291,8 +198,13 @@ void Game::round(string player)
 			setBoard(humanObj->play());
 			if (setWin("H"))
 			{
-				cout << "You Win!" << endl;
-				cout << "You haven't seen the last of me " << endl;
+				boardViewObj->ViewBoard(boardObj->GetBoard());
+				cout << endl << endl;
+				cout << "*****************************************" << endl;
+				cout << "*             You Win!                  *" << endl;
+				cout << "*   You haven't seen the last of me     *" << endl;
+				cout << "*****************************************" << endl;
+				cout << endl;
 				setEndGame();
 				break;
 			}
@@ -407,6 +319,7 @@ void Game::askHelp()
 	do
 	{
 		cout << "****************************************************" << endl;
+		cout << "*                 ~~ Help? ~~                      *" << endl;
 		cout << "*     Would you like some help?                    *" << endl;
 		cout << "*     Enter 'y' for yes or 'n' for no              *" << endl;
 		cout << "****************************************************" << endl;
@@ -429,7 +342,15 @@ void Game::askHelp()
 
 void Game::setEndGame()
 {
-	endGame = true;
+	if (endGame = false)
+	{
+		endGame = true;
+	}
+	else
+	{
+		endGame = false;
+	}
+	
 }
 
 

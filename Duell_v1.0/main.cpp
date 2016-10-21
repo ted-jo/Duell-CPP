@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
 		case '3' :
 		{
 			// Load a Saved Game
-			Game * game = new Game();
-			game->loadGame();
+			Tournament * tournament = new Tournament();
+			tournament->loadGame();
 			break;
 		}
 		case '4' :

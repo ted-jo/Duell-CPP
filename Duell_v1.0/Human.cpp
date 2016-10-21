@@ -58,6 +58,7 @@ void Human::getCoordinates()
 				cout << "Would you like to move Forward or Lateral first?" << endl;
 				cout << "Enter '1' for Forward or '2' for Lateral: ";
 				cin >> directionInput;
+				cout << endl;
 			} while (!((directionInput != 1) || (directionInput != 2)));
 			
 		}

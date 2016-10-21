@@ -11,11 +11,12 @@ public:
 	void round(string);
 	void startGame();
 	void setEndGame();
+	bool getEndGame() { return endGame; }
 	Board getBoard() { return * boardObj; }
 	void setBoard(Board *);
 	void saveGame(string);
 	bool savePrompt(string);
-	void loadGame();
+	//void loadGame();
 	string firstPlayer();
 	void setWinLoad(int, int);
 	bool setWin(string player);

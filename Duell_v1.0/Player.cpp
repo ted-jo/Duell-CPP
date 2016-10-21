@@ -307,16 +307,17 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 					first = false;
 					continue;
 				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == tempY && oppositePlayer)
-				{
-					return true;
-				}
 				// Return False if path is blocked
 				if (!tempBoard[startY][startX].isEmpty())
 				{
 					return false;
 				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == endX && startY == tempY && oppositePlayer)
+				{
+					return true;
+				}
+
 			}
 			else
 			{
@@ -334,27 +335,28 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 	else if(startY < endY)
 	{
 		tempY--;
-		for (startY; startY <= endY; startY++)
+		for (startY; startY < endY; startY++)
 		{
 			if (!execute)
 			{
 				if (first)
 				{
-					cout << tempBoard[startY][startX].displayDie() << endl;
 					first = false;
 					continue;
-				}
-				cout << tempBoard[startY][startX].displayDie() << endl;
-				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == tempY && oppositePlayer)
-				{
-					return true;
 				}
 				// Return False if path is blocked
 				if (!tempBoard[startY][startX].isEmpty())
 				{
 					return false;
 				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == endX && startY == tempY && oppositePlayer)
+				{
+					return true;
+				}
+
+
+
 			}
 			else
 			{
@@ -394,16 +396,17 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 					first = false;
 					continue;
 				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == tempX && startY == endY && oppositePlayer)
-				{
-					return true;
-				}
 				// Return False if path is blocked
 				if (!tempBoard[startY][startX].isEmpty())
 				{
 					return false;
 				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == tempX && startY == endY && oppositePlayer)
+				{
+					return true;
+				}
+
 			}
 			else
 			{
@@ -430,16 +433,17 @@ bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, boo
 					first = false;
 					continue;
 				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == tempX && startY == endY && oppositePlayer)
-				{
-					return true;
-				}
 				// Return False if path is blocked
 				if (!tempBoard[startY][startX].isEmpty())
 				{
 					return false;
 				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == tempX && startY == endY && oppositePlayer)
+				{
+					return true;
+				}
+
 			}
 			else
 			{
