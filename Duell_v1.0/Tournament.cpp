@@ -35,8 +35,8 @@ void Tournament::displayWinner()
 	}
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl;
 	cout << "*                   ~~ End of Tournament ~~                 *" << endl;
-	cout << "*     The Computer finished with " << computerWins << " wins                       *" << endl;
-	cout << "*     You finished with " << humanWins << " wins                            *" << endl;
+	cout << "*     The Computer finished with " << computerWins << " wins                     *" << endl;
+	cout << "*     You finished with " << humanWins << " wins                              *" << endl;
 	cout << "*                                                           *" << endl;
 	cout << winner << endl;
 	cout << "*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*" << endl;

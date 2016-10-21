@@ -5,8 +5,21 @@
 
 
 
-// Board Constructor
-// New Board is created when board object is created
+/* *********************************************************************
+Function Name: Board Constructor
+Purpose: Construct a Board Object
+Parameters:
+Return Value: 
+Local Variables:
+gameboard, a 2D vector of Die objects
+C1-C9, new die pointers for Computer die
+H1-H9, new die pointers for Human die
+Algorithm:
+1) Inline initialize the vector<vector<Die>> gameboard to the correct size
+2) Create 9 new dies for the computer and 9 new dies for the human
+3) Set each of the Dies to the proper starting values and store them in the proper location on the gameboard
+Assistance Received: none
+********************************************************************* */
 Board::Board() : gameboard(8, vector <Die>(9))
 {
 	// Create New Dice Instances for Computer Player
@@ -64,7 +77,23 @@ void Board::setBoard(vector<vector<Die>> board)
 {
 	gameboard = board;
 }
-
+/* *********************************************************************
+Function Name: movePieceUp
+Purpose: Move the Die from gameboard[y][x] --> gameboard[y+1][x]
+Parameters:
+x, y, ints containing the x and y coordinates
+Return Value: void
+Local Variables:
+player, string that gets player based off gameboard[y][x]
+newDie, pointer to a new Die object used to replace the previous piece
+Algorithm:
+1) Get player from gameboard[y][x].getPlayer();
+2) The player determines if the Die is going to roll forward or backward when moving Up
+3) If it's a human die, roll Die forward one roll, move Up one space, replace old space with a new empty die
+4) If it's a computer die, roll Die backward one roll, move Up one space, replace old space with a new empty die
+5) set the gameboard to the Board class
+Assistance Received: none
+********************************************************************* */
 void Board::movePieceUp(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
@@ -86,7 +115,23 @@ void Board::movePieceUp(int x, int y)
 
 	setBoard(gameboard);
 }
-
+/* *********************************************************************
+Function Name: movePieceDown
+Purpose: Move the Die from gameboard[y][x] --> gameboard[y-1][x]
+Parameters:
+x, y, ints containing the x and y coordinates
+Return Value: void
+Local Variables:
+player, string that gets player based off gameboard[y][x]
+newDie, pointer to a new Die object used to replace the previous piece
+Algorithm:
+1) Get player from gameboard[y][x].getPlayer();
+2) The player determines if the Die is going to roll foward or backward when moving down
+3) If it's a human die, roll Die backward one roll, move down one space, replace old space with a new empty die
+4) If it's a computer die, roll Die forward one roll, move down one space, replace old space with a new empty die
+5) set the gameboard to the Board class
+Assistance Received: none
+********************************************************************* */
 void Board::movePieceDown(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
@@ -108,7 +153,23 @@ void Board::movePieceDown(int x, int y)
 
 	setBoard(gameboard);
 }
-
+/* *********************************************************************
+Function Name: movePieceLeft
+Purpose: Move the Die from gameboard[y][x] --> gameboard[y][x-1]
+Parameters:
+x, y, ints containing the x and y coordinates
+Return Value: void
+Local Variables:
+player, string that gets player based off gameboard[y][x]
+newDie, pointer to a new Die object used to replace the previous piece
+Algorithm:
+1) Get player from gameboard[y][x].getPlayer();
+2) The player determines if the Die is going to roll left or right when moving right
+3) If it's a human die, roll Die left one roll, move left one space, replace old space with a new empty die
+4) If it's a computer die, roll Die right one roll, move right one space, replace old space with a new empty die
+5) set the gameboard to the Board class
+Assistance Received: none
+********************************************************************* */
 void Board::movePieceLeft(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
@@ -132,7 +193,23 @@ void Board::movePieceLeft(int x, int y)
 
 
 
-
+/* *********************************************************************
+Function Name: movePieceRight
+Purpose: Move the Die from gameboard[y][x] --> gameboard[y][x+1]
+Parameters:
+x, y, ints containing the x and y coordinates
+Return Value: void
+Local Variables:
+player, string that gets player based off gameboard[y][x]
+newDie, pointer to a new Die object used to replace the previous piece
+Algorithm:
+1) Get player from gameboard[y][x].getPlayer();
+2) The player determines if the Die is going to roll left or right when moving right
+3) If it's a human die, roll Die right one roll, move right one space, replace old space with a new empty die
+4) If it's a computer die, roll Die left one roll, move right one space, replace old space with a new empty die
+5) set the gameboard to the Board class
+Assistance Received: none
+********************************************************************* */
 void Board::movePieceRight(int x, int y)
 {
 	string player = gameboard[y][x].getPlayer();
@@ -155,8 +232,20 @@ void Board::movePieceRight(int x, int y)
 }
 
 
-
-// TODO: implement this during coodinate entry.
+/* *********************************************************************
+Function Name: checkOccupiedSpace
+Purpose: Check if the start coordinates contains a die of the correct player
+Parameters:
+x, y, two ints containing the start x/y coordinates
+player, a string containing the player who called it
+Local Variables: None
+Algorithm:
+1) Check if the gameboard is empty at [y][x]
+2)		If true return false
+3) If it's not empty check to make sure it's one of your pieces
+4) Return true if its not empty and it is one of your Dies
+Assistance Received: none
+********************************************************************* */
 bool Board::checkOccupiedSpace(int x, int y, string player)
 {
 	if (gameboard[y][x].isEmpty())
@@ -171,7 +260,28 @@ bool Board::checkOccupiedSpace(int x, int y, string player)
 
 	return true;
 }
-
+/* *********************************************************************
+Function Name: checkNumSpaces
+Purpose: To check if start (x, y) is correct number of spaces from end (x, y)
+based off the top number of the starting piece
+Parameters:
+startX & startY, integers containing the end X/Y positions
+endx & endY, integers containing the end X/Y positions
+Return Value: bool, return true if they are the correct number of spaces away
+Local Variables:
+vector<int> die, a temp holder for the positions of a die
+int move, takes the [0] index of die which is topNum == number of moves
+int tempX, tempY, tempXY, used to store the value of the start X/Y - endX/Y 
+which shows us how many spaces they are from each other
+Algorithm:
+1) Fill in vector<int> die with the die from the [startY][startX] location on the gameboard
+2) Set int move to the [0] location on the die
+3) Subtract the end point by the starting point and take absolute value
+4) Add together to get total number of spaces away
+5) If number of moves allowed == number of spaces away --> return true
+6) else return false
+Assistance Received: none
+********************************************************************* */
 // Function to make sure the end coordinates are the correct
 // number of spaces away from the start coordinates
 bool Board::checkNumSpaces(int startX, int startY, int endX, int endY)
@@ -198,11 +308,29 @@ bool Board::checkNumSpaces(int startX, int startY, int endX, int endY)
 	}
 }
 
-
-// Create die based off given top number for loading game
-// Die[top, bottom, left, right, front, back]
+/* *********************************************************************
+Function Name: dieSwitch
+Purpose: To create the Die pieces on load game
+Parameters:
+topNum, an int containing the top number
+rightNum, an int containing the right number
+player, a string containing the player
+Return Value: A Die pointer to the newly created Die
+Local Variables:
+d, a pointer to a new Die()
+Algorithm:
+1) Create pointer to a new die, d
+2) Enter switch statement with value of top number
+3) Execute nested switch statement with value of the right number
+4) Create a Die with the given top, right, and front back from switch statement
+and set to d
+5) break out of switches
+6) Return d
+Assistance Received: none
+********************************************************************* */
 Die * Board::dieSwitch(int topNum, int rightNum, string player)
 {
+	// Die[top, bottom, left, right, front, back]
 	Die * d = new Die();
 
 	switch (topNum)
