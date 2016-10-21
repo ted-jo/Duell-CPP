@@ -63,6 +63,8 @@ void Tournament::startTournament()
 	// Get who's playing first
 	string player = gameObj->firstPlayer();
 	bool endGame = false;
+	gameObj->setBoard(boardObj);
+
 	while (!endGame)
 	{
 		gameObj->round(player);
