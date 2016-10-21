@@ -19,7 +19,6 @@ Board * Computer::play()
 	if (keyPieceAttack("C", false))
 	{
 		cout << "Computer has attacked your Key Piece" << endl;
-		cout << "Computer Wins!" << endl;
 	}
 	// Check to see if the Human has any moves that 
 	// will overtake the AI's keypiece

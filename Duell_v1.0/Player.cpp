@@ -473,19 +473,20 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	if (moveType == 1)
 	{
 		// Display results for keypiece attack algorithm
-		cout << "The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can win the game" << endl;
+		cout << ""
+		cout << "*The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can win the game" << endl;
 
 	}
 	else if (moveType == 2)
 	{
 		// Display results for keypiece block algorithm
-		cout << "The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can block an attack on the keypiece" << endl;
+		cout << "*The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can block an attack on the keypiece" << endl;
 
 	}
 	else if (moveType == 3)
 	{
 		// Display results for overtake piece
-		cout << "The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can overtake a Human piece" << endl;
+		cout << "*The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can overtake a Human piece" << endl;
 
 	}
 	else
@@ -615,7 +616,6 @@ bool Player::keyPieceAttack(string player, bool display)
 	return false;
 }
 
-// TODO: move keypiece if needed
 
 // Second Pass of AI
 // Check if Human player can strike Computer KeyPiece or Keyspace
@@ -636,7 +636,7 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 	else if (player == "C" && keySpace)
 	{
 		endX = 4;
-		endY = 0;	
+		endY = 7;	
 	}
 	// If its a human move and we're trying to protect the key piece
 	else if(player == "H" && !keySpace)
@@ -649,10 +649,10 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 	else
 	{
 		endX = 4;
-		endY = 7;
+		endY = 0;
 	}
 
-	for (int y = 0; y <= 7; y++)
+	for (int y = 7; y >= 0; y--)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
@@ -761,52 +761,6 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 								}
 							}
 						}
-						
-						//if (getPath(x, y, endX, endY, 0, false) || getPath(x, y, endX, endY, 2, false))
-						//{
-						//	if (endY > y)
-						//	{
-						//		endY--;
-						//		// For a forward or lateral->forward attack set --endY
-						//		// So block manuever is executed one space below keypiece
-						//		if (executeBlock(endX, endY, true))
-						//		{
-						//			return true;
-						//		}
-						//	}
-						//	else if (endY < y)
-						//	{
-						//		endY++;
-						//		if (executeBlock(endX, endY, true))
-						//		{
-						//			return true;
-						//		}
-						//	}
-
-						//}
-						//// For a forward->lateral attack
-						//// Check if Human will be attacking from left or right 
-						//// Execute Block on appropriate space
-						//else if (getPath(x, y, endX, endY, 1, false))
-						//{
-						//	// Block Space to left of Keypiece
-						//	if (endX > x)
-						//	{
-						//		--endX;
-						//		if (executeBlock(endX, endY, true))
-						//		{
-						//			return true;
-						//		}
-						//	}
-						//	else if (endX < x)
-						//	{
-						//		++endX;
-						//		if (executeBlock(endX, endY, true))
-						//		{
-						//			return true;
-						//		}
-						//	}
-						//}
 					}
 				}
 			}
@@ -932,7 +886,7 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 	// To find a candidate to block from below
 	// find a Computer piece that can move to endX--
 
-	for (int y = 0; y <= 7; y++)
+	for (int y = 7; y >= 0; y--)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
@@ -982,7 +936,7 @@ bool Player::checkOvertake(string player)
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	int direction;
 
-	for (int y = 0; y <= 7; y++)
+	for (int y = 7; y >= 0; y--)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
@@ -1024,7 +978,7 @@ bool Player::checkOvertake(string player)
 				// to overtake a Computer Piece
 				if (tempBoard[y][x].getPlayer() == "H")
 				{
-					for (int endY = 0; endY <= 7; endY++)
+					for (int endY = 7; endY >= 0; endY--)
 					{
 						for (int endX = 0; endX <= 8; endX++)
 						{
