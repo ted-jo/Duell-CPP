@@ -553,6 +553,7 @@ bool Player::keyPieceAttack(string player, bool display)
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
 						{
+							displayMove(x, y, endX, endY, 1, direction);
 							if (getPath(x, y, endX, endY, direction, true))
 							{
 								return true;
@@ -566,6 +567,7 @@ bool Player::keyPieceAttack(string player, bool display)
 						// If direction != -1 path is clear in that direction
 						if (direction != -1)
 						{
+							displayMove(x, y, endX, endY, 1, direction);
 							if (getPath(x, y, 4, 0, direction, true))
 							{
 								return true;

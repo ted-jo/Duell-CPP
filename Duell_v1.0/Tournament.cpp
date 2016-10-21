@@ -7,8 +7,7 @@ Tournament::Tournament()
 {
 	gameObj = new Game();
 	boardObj = new Board();
-	//computerWins = 0;
-	//humanWins = 0;
+
 }
 
 Tournament::~Tournament()
@@ -16,18 +15,6 @@ Tournament::~Tournament()
 	delete gameObj;
 	delete boardObj;
 }
-
-
-//void Tournament::setComputerWins(int computerScore)
-//{
-//	computerWins = computerScore;
-//}
-//
-//void Tournament::setHumanWins(int humanScore)
-//{
-//	humanWins = humanScore;
-//
-//}
 
 void Tournament::displayWinner()
 {
@@ -124,7 +111,12 @@ void Tournament::loadGame()
 
 	do
 	{
-		cout << "Enter file name ex. game1" << endl;
+		cout << "******************************************" << endl;
+		cout << "*             ~~ Load Game ~~            *" << endl;
+		cout << "*        Enter file name ex. game1       *" << endl;
+		cout << "******************************************" << endl;
+		cout << endl;
+		cout << "     File name - ";
 		cin >> fileName;
 		fileName += ".txt";
 		file.open(fileName);
