@@ -9,6 +9,7 @@ Game::Game()
 	boardViewObj = new boardView();
 	humanWin = 0;
 	computerWin = 0;
+	endGame = false;
 }
 
 
@@ -213,16 +214,6 @@ void Game::round(string player)
 	}
 }
 
-void Game::startGame()
-{
-	// Get who's playing first
-	string player = firstPlayer();
-	while (!endGame)
-	{
-		round(player);
-		setEndGame();
-	}
-}
 
 /* *********************************************************************
 Function Name: firstPlayer

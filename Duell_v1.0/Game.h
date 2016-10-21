@@ -8,27 +8,30 @@ class Game
 public:
 	Game();
 	~Game();
+	string firstPlayer();
 	void round(string);
-	void startGame();
-	void setEndGame();
-	bool getEndGame() { return endGame; }
-	Board getBoard() { return * boardObj; }
-	void setBoard(Board *);
 	void saveGame(string);
 	bool savePrompt(string);
-	//void loadGame();
-	string firstPlayer();
+	void askHelp();
+	
+	// Set Functions
+	void setEndGame();
+	void setBoard(Board *);
 	void setWinLoad(int, int);
 	bool setWin(string player);
-	int getHumanWins() { return humanWin; }
-	int getComputerWins() { return computerWin; }
-	void askHelp();
+
+	// Get Functions
+	Board getBoard() const { return *boardObj; }
+	bool getEndGame() const { return endGame; }
+	int getHumanWins() const { return humanWin; }
+	int getComputerWins() const { return computerWin; }
+	
 private:
 	Human * humanObj;
 	Computer * computerObj;
 	Board * boardObj;
 	boardView * boardViewObj;
-	bool endGame = false;
+	bool endGame;
 	int humanWin;
 	int computerWin;
 };

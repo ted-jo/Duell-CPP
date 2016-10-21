@@ -10,8 +10,8 @@ public:
 	Board * play();
 	void setCoordinates(int, int, int, int, int);
 	void getCoordinates();
-	int getStartXCoordinate() { return startX; }
-	int getStartYCoordinate() { return startY; }
+	int getStartXCoordinate() const { return startX; }
+	int getStartYCoordinate() const { return startY; }
 private:
 	int startX, startY, endX, endY, direction;
 };

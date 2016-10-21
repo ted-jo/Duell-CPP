@@ -10,7 +10,7 @@ public:
 	~Player() { delete boardObj; }
 	// Play is virtual so its overwritten in Human and Player. It will control a single turn of play
 	virtual Board * play() = 0;
-	Board getBoard() { return * boardObj; }
+	Board getBoard() const { return * boardObj; }
 	void setBoard(Board *);
 	bool checkOOB(int, int);
 	bool validateMove(int, int, int, int, int, string);

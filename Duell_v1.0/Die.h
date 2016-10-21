@@ -6,10 +6,10 @@ class Die
 public:
 	Die() : die(6) {}
 	~Die();
-	vector <int> getDie() { return die; }
-	string getPlayer() { return player; }
-	bool oppositePlayer(string);
-	bool getKeyPiece() { return keypiece; }
+	vector <int> getDie() const { return die; }
+	string getPlayer() const { return player; }
+	bool getKeyPiece() const { return keypiece; }
+	bool oppositePlayer(string);	
 	void setDie(vector<int>);
 	void frontalMove();
 	void backwardMove();
