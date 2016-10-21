@@ -7,10 +7,6 @@ Player::Player()
 {
 }
 
-Player::~Player()
-{
-}
-
 void Player::setBoard(Board * board)
 {
 	boardObj = board;
@@ -76,7 +72,6 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 		validation = false;
 	}
 	// Check if there are any pieces blocking move
-	//else if (!boardObj->checkPath(startX, startY, endX, endY, direction))
 	else if(!getPath(startX, startY, endX, endY, direction, false))
 	{
 		cout << "*****************************************************" << endl;
@@ -133,7 +128,7 @@ bool Player::checkHumanWin()
 	{
 		return true;
 	}
-	else if (getKeypieceLoc("C").size() == 0)
+	else if (getKeypieceLoc("H").size() == 0)
 	{
 		return true;
 	}
@@ -150,7 +145,7 @@ bool Player::checkComputerWin()
 	{
 		return true;
 	}
-	else if (getKeypieceLoc("H").size() == 0)
+	else if (getKeypieceLoc("C").size() == 0)
 	{
 		return true;
 	}
@@ -339,15 +334,17 @@ bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool 
 	else if(startY < endY)
 	{
 		tempY--;
-		for (startY; startY < endY; startY++)
+		for (startY; startY <= endY; startY++)
 		{
 			if (!execute)
 			{
 				if (first)
 				{
+					cout << tempBoard[startY][startX].displayDie() << endl;
 					first = false;
 					continue;
 				}
+				cout << tempBoard[startY][startX].displayDie() << endl;
 				// If the end space is on an opposing die overtake end space
 				if (startX == endX && startY == tempY && oppositePlayer)
 				{
@@ -523,18 +520,7 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	}
 }
 
-void Player::help()
-{
-	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-	
-	// Check if Human has winning move
-	if (keyPieceAttack("H", true));
-	// Check if 
-	else if (protectKeyPiece("H", false));
-	else if (protectKeyPiece("H", true));
 
-
-}
 
 
 
@@ -987,7 +973,7 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 	return false;
 }
 
-bool Player::checkOvertake()
+bool Player::checkOvertake(string player)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	int direction;
@@ -996,33 +982,65 @@ bool Player::checkOvertake()
 	{
 		for (int x = 0; x <= 8; x++)
 		{
-			// If Die piece is a computer piece check all possible moves
-			// to either overtake a Human Piece
-			if (tempBoard[y][x].getPlayer() == "C")
+			// Computer Move
+			if (player == "C")
 			{
-				for (int endY = 0; endY <= 7; endY++)
+				// If Die piece is a computer piece check all possible moves
+				// to overtake a Human Piece
+				if (tempBoard[y][x].getPlayer() == "C")
 				{
-					for (int endX = 0; endX <= 8; endX++)
+					for (int endY = 0; endY <= 7; endY++)
 					{
-						if (tempBoard[endY][endX].getPlayer() == "H")
+						for (int endX = 0; endX <= 8; endX++)
 						{
-							if (boardObj->checkNumSpaces(x, y, endX, endY))
+							if (tempBoard[endY][endX].getPlayer() == "H")
 							{
-								direction = getDirection(x, y, endX, endY);
-								if (direction != -1)
+								if (boardObj->checkNumSpaces(x, y, endX, endY))
 								{
-									displayMove(x, y, endX, endY, 3, direction);
-									if (getPath(x, y, endX, endY, direction, true))
+									direction = getDirection(x, y, endX, endY);
+									if (direction != -1)
 									{
-										return true;
-									}
+										displayMove(x, y, endX, endY, 3, direction);
+										if (getPath(x, y, endX, endY, direction, true))
+										{
+											return true;
+										}
 
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+			// Human move
+			else
+			{
+				// If Die piece is a Human piece check all possible moves
+				// to overtake a Computer Piece
+				if (tempBoard[y][x].getPlayer() == "H")
+				{
+					for (int endY = 0; endY <= 7; endY++)
+					{
+						for (int endX = 0; endX <= 8; endX++)
+						{
+							if (tempBoard[endY][endX].getPlayer() == "C")
+							{
+								if (boardObj->checkNumSpaces(x, y, endX, endY))
+								{
+									direction = getDirection(x, y, endX, endY);
+									if (direction != -1)
+									{
+										displayHelp(x, y, endX, endY, direction, "overtake");
+										return true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 		}
 	}
 	return false;
@@ -1089,115 +1107,101 @@ bool Player::executeBestMove()
 	}
 }
 
+void Player::help()
+{
+	// Check if Human has winning move
+	if (keyPieceAttack("H", true));
+	// Check if 
+	else if (protectKeyPiece("H", false));
+	else if (protectKeyPiece("H", true));
+	else if (checkOvertake("H"));
+	else
+	{
+		cout << "***********************************************************************************" << endl;
+		cout << "*                               ~~ Help ~~                                        *" << endl;
+		cout << "*     There are no critical moves to execute, move any die of your choosing       *" << endl;
+		cout << "***********************************************************************************" << endl;
+
+	}
+
+
+}
+
 void Player::displayHelp(int startX, int startY, int endX, int endY, int direction, string moveType)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	string message;
+	int displayX = startX;
+	int displayY = startY;
 
-	// Display Help if a Human Piece can attack KeyPiece
 	if (moveType == "attackPiece")
 	{
-		if (direction == 0)
-		{
-			if (startX == endX)
-			{
-				cout << "***********************************************************************************" << endl;
-				cout << "*                                 Help                                            *" << endl;
-				cout << "*     To attack the key piece and win the game                                    *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
-				cout << "***********************************************************************************" << endl;
-
-
-			}
-			else
-			{
-				cout << "*     To attack the key piece and win the game                                    *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
-			}
-
-		}
-		else if (direction == 1)
-		{
-			cout << "*     To attack the key piece and win the game                                    *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
-		}
-		else if (direction == 2)
-		{
-			cout << "*     To attack the key piece and win the game                                    *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
-		}
+		message = "To attack the key piece and win the game";
 	}
 	else if (moveType == "attackSpace")
 	{
-		if (direction == 0)
-		{
-			if (startX == endX)
-			{
-				cout << "***********************************************************************************" << endl;
-				cout << "*                                 Help                                            *" << endl;
-				cout << "*     To attack the key piece and win the game                                    *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
-				cout << "***********************************************************************************" << endl;
-			}
-			else
-			{
-				cout << "*     To attack the key space and win the game                                    *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
-			}
-
-		}
-		else if (direction == 1)
-		{
-			cout << "*     To attack the key space and win the game                                    *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
-		}
-		else if (direction == 2)
-		{
-			cout << "*     To attack the key space and win the game                                    *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
-		}
+		message = "To attack the key space and win the game";
 	}
 	else if (moveType == "block")
 	{
-		if (direction == 0)
+		message = "To perform blocking move                ";
+	}
+	else if (moveType == "overtake")
+	{
+		message = "To overtake a computer piece            ";
+	}
+	else
+	{
+
+	}
+
+	// Display Help if a Human Piece can attack KeyPiece
+
+	if (direction == 0)
+	{
+		if (startX == endX)
 		{
-			if (startX == endX)
-			{
-				cout << "***********************************************************************************" << endl;
-				cout << "*                                 Help                                            *" << endl;
-				cout << "*     To perform a blocking move                                                  *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
-				cout << "***********************************************************************************" << endl;
-			}
-			else
-			{
-				cout << "*     To perform a blocking move                                     *" << endl;
-				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
-			}
+			cout << "*******************************************************************************************************" << endl;
+			cout << "*                                           ~~ Help ~~                                                *" << endl;
+			cout << "*     " << message << "                                                        *" << endl;
+			cout << "*     Choose die " << tempBoard[displayY][displayX].displayDie() << " at location (" << ++startY << "," << ++startX << ")                                                                *" << endl;
+			cout << "*     Roll it to location (" << ++endY << "," << ++endX << ") frontally because it is the most direct clear path                    *" << endl;
+			cout << "*******************************************************************************************************" << endl;
+
 
 		}
-		else if (direction == 1)
+		else
 		{
-			cout << "*     To perform a blocking move                                   *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
+			cout << "*******************************************************************************************************" << endl;
+			cout << "*                                           ~~ Help ~~                                                *" << endl;
+			cout << "*     " << message << "                                                        *" << endl;
+			cout << "*     Choose die " << tempBoard[displayY][displayX].displayDie() << " at location (" << ++startY << "," << ++startX << ")                                                                *" << endl;
+			cout << "*     Roll it to location (" << ++endY << "," << ++endX << ") laterally because it is the most direct clear path          *" << endl;
+			cout << "*******************************************************************************************************" << endl;
+
 		}
-		else if (direction == 2)
-		{
-			cout << "*     To perform a blocking move                                  *" << endl;
-			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
-			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
-		}
+
 	}
+	else if (direction == 1)
+	{
+		cout << "*******************************************************************************************************" << endl;
+		cout << "*                                           ~~ Help ~~                                                *" << endl;
+		cout << "*     " << message << "                                                        *" << endl;
+		cout << "*     Choose die " << tempBoard[displayY][displayX].displayDie() << " at location (" << ++startY << "," << ++startX << ")                                                                *" << endl;
+		cout << "*     Roll it to location (" << ++endY << "," << ++endX << ") frontally first because a frontal then lateral path is clear          *" << endl;
+		cout << "*******************************************************************************************************" << endl;
+	}
+	else if (direction == 2)
+	{
+		cout << "*******************************************************************************************************" << endl;
+		cout << "*                                           ~~ Help ~~                                                *" << endl;
+		cout << "*     " << message << "                                                        *" << endl;
+		cout << "*     Choose die " << tempBoard[displayY][displayX].displayDie() << " at location (" << ++startY << "," << ++startX << ")                                                                *" << endl;
+		cout << "*     Roll it to location (" << ++endY << "," << ++endX << ") laterally first because a lateral then frontal path is clear          *" << endl;
+		cout << "*******************************************************************************************************" << endl;
+
+	}
+	
 }
 
 

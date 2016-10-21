@@ -35,7 +35,7 @@ Board * Computer::play()
 	{
 		cout << "Human has finishing move on key space, initiate block" << endl;
 	}
-	else if (checkOvertake())
+	else if (checkOvertake("C"))
 	{
 		cout << "Computer executed a move to overtake a human piece";
 	}

@@ -15,6 +15,10 @@ Game::Game()
 
 Game::~Game()
 {
+	delete humanObj;
+	delete computerObj;
+	delete boardObj;
+	delete boardViewObj;
 }
 
 void Game::setBoard(Board * board)
@@ -63,18 +67,29 @@ bool Game::savePrompt(string nextPlayer)
 {
 	char input;
 
-	cout << "Would you like to save and exit the game?" << endl;
-	cout << "Enter 'y' for yes or 'n' for no" << endl;
-	cin >> input;
-	tolower(input);
-
-	if (input == 'y')
+	do
 	{
-		saveGame(nextPlayer);
-		return true;
-	}
+		cout << "****************************************************" << endl;
+		cout << "*     Would you like to save and exit the game?    *" << endl;
+		cout << "*     Enter 'y' for yes or 'n' for no              *" << endl;
+		cout << "****************************************************" << endl;
+		cout << endl;
+		cout << "     Selection: ";
+		cin >> input;
+		cout << endl;
+		tolower(input);
 
-	return false;
+		if (input == 'y')
+		{
+			saveGame(nextPlayer);
+			return true;
+		}
+		else if (input == 'n')
+		{
+			return false;
+		}		
+	} while (input != 'y' && input != 'n');
+
 }
 
 void Game::loadGame()
@@ -194,27 +209,23 @@ Parameters:
 player, a string. It refers to the player who goes first
 Return Value: void
 Local Variables:
-first, a bool that flips after first execution of loop since the first round 
-has a different order of steps
 Algorithm:
 1) Loop through steps while private endGame variable is false
 2) Display Gameboard
 3) Set the board object in the player class
-4) Execute move in Player function
-5) Set board object in Game Class
-6) Check the board to see if player has won. If true, set endgame to true and break 
-7) Display board
-8) Ask user to save
-9) Repeat steps for next player
-10) Return to top of loop
+4) Ask if user needs help
+5) Execute move in Player function
+6) Set board object in Game Class
+7) Check the board to see if player has won. If true, set endgame to true and break 
+8) Display board
+9) Ask user to save
+10) Repeat steps for next player
+11) Return to top of loop
 Assistance Received: none
 ********************************************************************* */
 void Game::round(string player)
 {
-	// Bool flips after first loop
-	// Used to not prompt for save 
-	// Before any player goes
-	bool first = true;
+
 
 	// Continue executing rounds until
 	// the endGame bool is flipped
@@ -223,72 +234,20 @@ void Game::round(string player)
 		// If the human player goes first execute in this order
 		if (player == "Human")
 		{
-			// Don't ask to save on the first iteration of loop
-			if (first)
-			{
-				first = false;
-
-				// Display the untouched board
-				boardViewObj->ViewBoard(boardObj->GetBoard());
-				// Set the board variable in the player class
-				// So the player has access to it
-				humanObj->setBoard(boardObj);
-				// Execute a human move
-				// Set the master board object of the Game class
-				setBoard(humanObj->play());
-				// Display the board after first move
-				boardViewObj->ViewBoard(boardObj->GetBoard());
-				// Ask user to Save game passing the next player
-				if (savePrompt("Computer"))
-				{
-					break;
-				}
-				// Set the changed board to the Player class
-				computerObj->setBoard(boardObj);
-				// Execute a Computer move
-				// Set the master board object of the Game class
-				setBoard(computerObj->play());
-				continue;
-			}
 			boardViewObj->ViewBoard(boardObj->GetBoard());
 			if (savePrompt("Human"))
 			{
 				break;
 			}
 			humanObj->setBoard(boardObj);
+			askHelp();
 			setBoard(humanObj->play());
 			if (setWin("H"))
 			{
 				cout << "You Win!" << endl;
+				cout << "Congrats, want a medal?" << endl;
 				setEndGame();
 				break;
-			}
-			boardViewObj->ViewBoard(boardObj->GetBoard());
-			if (savePrompt("Computer"))
-			{
-				break;
-			}
-			computerObj->setBoard(boardObj);
-			setBoard(computerObj->play());
-		}
-		else
-		{
-			// Don't ask to save on the first iteration of loop
-			if (first)
-			{
-				first = false;
-				// Display first instance of gameboard
-				boardViewObj->ViewBoard(boardObj->GetBoard());
-				computerObj->setBoard(boardObj);
-				setBoard(computerObj->play());
-				boardViewObj->ViewBoard(boardObj->GetBoard());
-				if (savePrompt("Human"))
-				{
-					break;
-				}
-				humanObj->setBoard(boardObj);
-				setBoard(humanObj->play());
-				continue;
 			}
 			boardViewObj->ViewBoard(boardObj->GetBoard());
 			if (savePrompt("Computer"))
@@ -299,7 +258,26 @@ void Game::round(string player)
 			setBoard(computerObj->play());
 			if (setWin("C"))
 			{
-				cout << "Computer Wins!" << endl;
+				cout << "You lose..." << endl;
+				cout << "Don't worry we won't tell anyone" << endl;
+				setEndGame();
+				break;
+			}
+		}
+		// If the computer player goes first execute in this order
+		else
+		{
+			boardViewObj->ViewBoard(boardObj->GetBoard());
+			if (savePrompt("Computer"))
+			{
+				break;
+			}
+			computerObj->setBoard(boardObj);
+			setBoard(computerObj->play());
+			if (setWin("C"))
+			{
+				cout << "Well that's embarassing" << endl;
+				cout << "You lose..." << endl;
 				setEndGame();
 				break;
 			}
@@ -309,9 +287,17 @@ void Game::round(string player)
 				break;
 			}
 			humanObj->setBoard(boardObj);
+			askHelp();
 			setBoard(humanObj->play());
+			if (setWin("H"))
+			{
+				cout << "You Win!" << endl;
+				cout << "You haven't seen the last of me " << endl;
+				setEndGame();
+				break;
+			}
 		}
-	
+
 	}
 }
 
@@ -413,6 +399,32 @@ bool Game::setWin(string player)
 	}
 
 	return false;
+}
+
+void Game::askHelp()
+{
+	char input;
+	do
+	{
+		cout << "****************************************************" << endl;
+		cout << "*     Would you like some help?                    *" << endl;
+		cout << "*     Enter 'y' for yes or 'n' for no              *" << endl;
+		cout << "****************************************************" << endl;
+		cout << endl;
+		cout << "     Selection: ";
+		cin >> input;
+		cout << endl;
+		tolower(input);
+
+		if (input == 'y')
+		{
+			humanObj->help();
+		}
+		else if (input == 'n')
+		{
+			break;
+		}
+	} while (input != 'y');
 }
 
 void Game::setEndGame()

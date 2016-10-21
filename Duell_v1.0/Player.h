@@ -7,7 +7,7 @@ class Player
 {
 public:
 	Player();
-	~Player();
+	~Player() { delete boardObj; }
 	// Play is virtual so its overwritten in Human and Player. It will control a single turn of play
 	virtual Board * play() = 0;
 	Board getBoard() { return * boardObj; }
@@ -27,13 +27,14 @@ public:
 
 	// Computer AI Functions
 	// First Pass
+	// Check if Piece can attack the key piece or key space
 	bool keyPieceAttack(string, bool);
 	// Second Pass
 	bool protectKeyPiece(string, bool);
 	bool executeBlock(int, int, bool);
 	// Third Pass
 	// Check for move that will overtake an opponent's piece
-	bool checkOvertake();
+	bool checkOvertake(string);
 	// Fourth Pass Move piece that can get closest
 	// to opponent keypiece/space
 	bool executeBestMove();

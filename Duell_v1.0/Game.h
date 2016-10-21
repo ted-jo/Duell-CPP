@@ -21,6 +21,7 @@ public:
 	bool setWin(string player);
 	int getHumanWins() { return humanWin; }
 	int getComputerWins() { return computerWin; }
+	void askHelp();
 private:
 	Human * humanObj;
 	Computer * computerObj;

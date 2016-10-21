@@ -3,6 +3,7 @@
 */
 #include "stdafx.h"     // Contains the pre-compiled headers.
 #include "Game.h"
+#include "Tournament.h"
 #include <stdio.h>
 
 
@@ -57,8 +58,12 @@ int main(int argc, char *argv[])
 			break;
 		}
 		case '2' :
+		{
 			// Start a new Tournament
+			Tournament * tournament = new Tournament();
+			tournament->startTournament();
 			break;
+		}
 		case '3' :
 		{
 			// Load a Saved Game
