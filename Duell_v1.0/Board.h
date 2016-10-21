@@ -12,7 +12,8 @@ public:
 	void movePieceLeft(int, int);
 	void movePieceRight(int, int);
 	bool checkOccupiedSpace(int, int, string);
-	bool checkPath(int, int, int, int, int);
+	//bool checkPath(int, int, int, int, int);
+	Die * dieSwitch(int, int, string);
 	bool checkNumSpaces(int, int, int, int);
 	vector< vector<Die> > & GetBoard() { return gameboard; };
 	void setBoard(vector<vector<Die>>);

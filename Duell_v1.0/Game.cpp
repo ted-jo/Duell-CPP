@@ -8,6 +8,8 @@ Game::Game()
 	computerObj = new Computer();
 	boardObj = new Board();
 	boardViewObj = new boardView();
+	humanWin = 0;
+	computerWin = 0;
 }
 
 
@@ -35,7 +37,7 @@ void Game::saveGame(string nextPlayer)
 
 	for (int i = 7; i >= 0; i--)
 	{
-		for (int j = 0; j < tempBoard[i].size(); j++)
+		for (int j = 0; j < 8; j++)
 		{
 			if (tempBoard[i][j].isEmpty())
 			{
@@ -50,8 +52,8 @@ void Game::saveGame(string nextPlayer)
 	}
 
 	file << "\n";
-	file << "Computer Wins: " << computerObj->getWin() << "\n\n";
-	file << "Human Wins: " << humanObj->getWin() << "\n\n";
+	file << "Computer Wins: " << getComputerWins() << "\n\n";
+	file << "Human Wins: " << getHumanWins() << "\n\n";
 	file << "Next Player: " << nextPlayer;
 
 	file.close();
@@ -78,9 +80,11 @@ bool Game::savePrompt(string nextPlayer)
 void Game::loadGame()
 {
 	fstream file;
-	string fileName, line, nextPlayer, computerWins, humanWins;;
+	string fileName, line, nextPlayer, computerWinsStr, humanWinsStr, tmp, player, topStr, rightStr;
+	int topNum, rightNum, computerWins, humanWins;
+	int iter = 0;
 	vector<vector<string>> fileVec;
-	vector<vector<Die>> gameBoard;
+	vector<vector<Die>> gameBoard(8, vector <Die>(9));
 	bool boardLoop = true;
 
 	do
@@ -120,14 +124,14 @@ void Game::loadGame()
 				{
 					if (iss >> temp >> item)
 					{
-						computerWins = item;
+						computerWinsStr = item;
 					}
 				}
 				else if (item == "Human")
 				{
 					if (iss >> temp >> item)
 					{
-						humanWins = item;
+						humanWinsStr = item;
 					}
 				}
 				else if (item == "Next")
@@ -144,16 +148,76 @@ void Game::loadGame()
 
 	}
 
-	cout << computerWins << endl;
-	cout << humanWins << endl;
-	cout << nextPlayer << endl;
+	// Loop through the 2D vector containing the 
+	// gameboard of strings
+	for (int i = 7; i >= 0; i--)
+	{
+		for (int j = 0; j < fileVec[i].size(); j++)
+		{
+			// Save the full string of the Die in Temp
+			tmp = fileVec[i][j];
+			// If the space contains a piece
+			if (tmp != "0")
+			{
+				// Grab the player from the first character of the string
+				player = tmp.substr(0, 1);
+				// Grab the top number from the second character
+				topStr = tmp.substr(1, 1);
+				// Grab the right number from the third character
+				rightStr = tmp.substr(2, 1);
+				// Convert from string to int
+				istringstream(topStr) >> topNum;
+				istringstream(rightStr) >> rightNum;
+				// Run die switch function to create the Die* to fill the board
+				gameBoard[iter][j] = *boardObj->dieSwitch(topNum, rightNum, player);
+			}			
+		}
+		iter++;
+	}
+
+	// Convert the number of wins to an int and set appropriate variables
+	istringstream(computerWinsStr) >> computerWins;
+	istringstream(humanWinsStr) >> humanWins;
+	boardObj->setBoard(gameBoard);
+	setBoard(boardObj);
+	setWinLoad(computerWins, humanWins);
+
+	// Start the game
+	round(nextPlayer);
 
 }
 
-
+/* *********************************************************************
+Function Name: round
+Purpose: To execute a single round of play
+Parameters:
+player, a string. It refers to the player who goes first
+Return Value: void
+Local Variables:
+first, a bool that flips after first execution of loop since the first round 
+has a different order of steps
+Algorithm:
+1) Loop through steps while private endGame variable is false
+2) Display Gameboard
+3) Set the board object in the player class
+4) Execute move in Player function
+5) Set board object in Game Class
+6) Check the board to see if player has won. If true, set endgame to true and break 
+7) Display board
+8) Ask user to save
+9) Repeat steps for next player
+10) Return to top of loop
+Assistance Received: none
+********************************************************************* */
 void Game::round(string player)
 {
+	// Bool flips after first loop
+	// Used to not prompt for save 
+	// Before any player goes
 	bool first = true;
+
+	// Continue executing rounds until
+	// the endGame bool is flipped
 	while (endGame == false)
 	{
 		// If the human player goes first execute in this order
@@ -163,15 +227,26 @@ void Game::round(string player)
 			if (first)
 			{
 				first = false;
+
+				// Display the untouched board
 				boardViewObj->ViewBoard(boardObj->GetBoard());
+				// Set the board variable in the player class
+				// So the player has access to it
 				humanObj->setBoard(boardObj);
+				// Execute a human move
+				// Set the master board object of the Game class
 				setBoard(humanObj->play());
+				// Display the board after first move
 				boardViewObj->ViewBoard(boardObj->GetBoard());
+				// Ask user to Save game passing the next player
 				if (savePrompt("Computer"))
 				{
 					break;
 				}
+				// Set the changed board to the Player class
 				computerObj->setBoard(boardObj);
+				// Execute a Computer move
+				// Set the master board object of the Game class
 				setBoard(computerObj->play());
 				continue;
 			}
@@ -182,7 +257,7 @@ void Game::round(string player)
 			}
 			humanObj->setBoard(boardObj);
 			setBoard(humanObj->play());
-			if (humanObj->checkHumanWin())
+			if (setWin("H"))
 			{
 				cout << "You Win!" << endl;
 				setEndGame();
@@ -202,6 +277,7 @@ void Game::round(string player)
 			if (first)
 			{
 				first = false;
+				// Display first instance of gameboard
 				boardViewObj->ViewBoard(boardObj->GetBoard());
 				computerObj->setBoard(boardObj);
 				setBoard(computerObj->play());
@@ -221,7 +297,7 @@ void Game::round(string player)
 			}
 			computerObj->setBoard(boardObj);
 			setBoard(computerObj->play());
-			if (computerObj->checkComputerWin())
+			if (setWin("C"))
 			{
 				cout << "Computer Wins!" << endl;
 				setEndGame();
@@ -250,6 +326,23 @@ void Game::startGame()
 	}
 }
 
+/* *********************************************************************
+Function Name: firstPlayer
+Purpose: To randomly select first player 
+Parameters:
+Return Value: The player who will go first
+Local Variables:
+human, an int that will contain the random number for the human
+computer, an int that will contain the random number for the computer
+player, a string containing the player who will go first
+Algorithm:
+1) Seed the random function with the current time
+2) Start loop which continues if there is a tie
+3) Randomly select a number 1-6 for human
+4) Randomly select a number 1-6 for computer
+5) Compare the two numbers and return the player with highest value
+Assistance Received: none
+********************************************************************* */
 string Game::firstPlayer()
 {
 	int human, computer;
@@ -290,7 +383,36 @@ string Game::firstPlayer()
 			cout << "          |        Roll again...                            |" << endl;
 			cout << "          +=================================================+" << endl;
 		}
+
 	} while (human == computer);
+}
+
+void Game::setWinLoad(int computerWins, int humanWins)
+{
+	computerWin = computerWins;
+	humanWin = humanWins;
+}
+
+bool Game::setWin(string player)
+{
+	if (player == "H")
+	{
+		if (humanObj->checkHumanWin())
+		{
+			humanWin++;
+			return true;
+		}
+	}
+	else
+	{
+		if (computerObj->checkComputerWin())
+		{
+			computerWin++;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Game::setEndGame()

@@ -5,8 +5,6 @@
 
 Player::Player()
 {
-	humanWin = 0;
-	computerWin = 0;
 }
 
 Player::~Player()
@@ -126,18 +124,6 @@ vector<int> Player::getKeypieceLoc(string player)
 	return location;
 }
 
-void Player::setWin(string player)
-{
-	if (player == "C")
-	{
-		computerWin++;
-	}
-	else
-	{
-		humanWin++;
-	}
-}
-
 bool Player::checkHumanWin()
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -145,12 +131,10 @@ bool Player::checkHumanWin()
 	// Check if the key square has been overtaken set win for Human
 	if (tempBoard[7][4].getPlayer() == "H")
 	{
-		setWin("H");
 		return true;
 	}
 	else if (getKeypieceLoc("C").size() == 0)
 	{
-		setWin("H");
 		return true;
 	}
 
@@ -164,12 +148,10 @@ bool Player::checkComputerWin()
 	// Check if the key square has been overtaken set win for Human
 	if (tempBoard[0][4].getPlayer() == "C")
 	{
-		setWin("C");
 		return true;
 	}
 	else if (getKeypieceLoc("H").size() == 0)
 	{
-		setWin("C");
 		return true;
 	}
 
@@ -541,8 +523,22 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	}
 }
 
-// TODO: check against key space fore human
-bool Player::keyPieceAttack(string player)
+void Player::help()
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	
+	// Check if Human has winning move
+	if (keyPieceAttack("H", true));
+	// Check if 
+	else if (protectKeyPiece("H", false));
+	else if (protectKeyPiece("H", true));
+
+
+}
+
+
+
+bool Player::keyPieceAttack(string player, bool display)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	vector<int> KeyPieceLocation = getKeypieceLoc(player);
@@ -576,11 +572,11 @@ bool Player::keyPieceAttack(string player)
 					// Check against the key space
 					else if ((boardObj->checkNumSpaces(x, y, 4, 0)))
 					{
-						direction = getDirection(x, y, endX, endY);
+						direction = getDirection(x, y, 4, 0);
 						// If direction != -1 path is clear in that direction
 						if (direction != -1)
 						{
-							if (getPath(x, y, endX, endY, direction, true))
+							if (getPath(x, y, 4, 0, direction, true))
 							{
 								return true;
 							}
@@ -601,6 +597,23 @@ bool Player::keyPieceAttack(string player)
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
 						{
+							if (display)
+							{
+								displayHelp(x, y, endX, endY, direction, "attackPiece");
+							}
+							return true;
+						}
+					}
+					else if ((boardObj->checkNumSpaces(x, y, 4, 7)))
+					{
+						direction = getDirection(x, y, 4, 7);
+						// If direction != -1 path is clear in that direction
+						if (direction != -1)
+						{
+							if (display)
+							{
+								displayHelp(x, y, 4, 7, direction, "attackSpace");
+							}
 							return true;
 						}
 					}
@@ -612,73 +625,304 @@ bool Player::keyPieceAttack(string player)
 	return false;
 }
 
+// TODO: move keypiece if needed
+
 // Second Pass of AI
-// Check if Human player can strike Computer KeyPiece
+// Check if Human player can strike Computer KeyPiece or Keyspace
 // Execute blocking 
-bool Player::protectKeyPiece()
+bool Player::protectKeyPiece(string player, bool keySpace)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-	vector<int> KeyPieceLocation = getKeypieceLoc("H");
-	int endX = KeyPieceLocation[0];
-	int endY = KeyPieceLocation[1];
-	int direction;
+	int direction, endX, endY;
+
+	// If its a computer move and we're trying to protect the key piece
+	if (player == "C" && !keySpace)
+	{
+		vector<int> KeyPieceLocation = getKeypieceLoc("H");
+		endX = KeyPieceLocation[0];
+		endY = KeyPieceLocation[1];
+	}
+	// If its a computer move and we're trying to protect the key space
+	else if (player == "C" && keySpace)
+	{
+		endX = 4;
+		endY = 0;	
+	}
+	// If its a human move and we're trying to protect the key piece
+	else if(player == "H" && !keySpace)
+	{
+		vector<int> KeyPieceLocation = getKeypieceLoc("C");
+		endX = KeyPieceLocation[0];
+		endY = KeyPieceLocation[1];
+	}
+	// If its a human move and we're trying to protect the key space
+	else
+	{
+		endX = 4;
+		endY = 7;
+	}
 
 	for (int y = 0; y <= 7; y++)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
-			// If Die piece is a human piece check all possible moves
-			// that can overtake the computer keypiece or the keyspace
-			if (tempBoard[y][x].getPlayer() == "H")
+			// Computer Move
+			if (player == "C")
 			{
-				// Check if the Human Piece is the correct
-				// number of spaces from the Computer Key Piece
-				if (boardObj->checkNumSpaces(x, y, endX, endY))
+				// If Die piece is a human piece check all possible moves
+				// that can overtake the computer keypiece or the keyspace
+				if (tempBoard[y][x].getPlayer() == "H")
 				{
-					// If check path is true, then Human has a winning move
-					// Execute block and return true
-					if (getPath(x, y, endX, endY, 0, false) || getPath(x, y, endX, endY, 2, false))
+					// Check if the Human Piece is the correct
+					// number of spaces from the Computer Key Piece
+					if (boardObj->checkNumSpaces(x, y, endX, endY))
 					{
-						if (endY > y)
+						direction = getDirection(x, y, endX, endY);
+						// If check path is true, then Human has a winning move
+						// Execute block and return true
+						if (direction != -1)
 						{
-							endY--;
-							// For a forward or lateral->forward attack set --endY
-							// So block manuever is executed one space below keypiece
-							if (executeBlock(endX, endY))
+							if (direction == 0)
 							{
-								return true;
+								// If its a vertical attack and end is higher than start
+								if (x == endX && endY > y)
+								{
+									endY--;
+									// For a forward attack set --endY
+									// So block manuever is executed one space below keypiece
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+								// If its a vertical attack and end is lower than start
+								else if (x == endX && endY < y)
+								{
+									endY++;
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+								// If its a Horizontal attack and end is higher than start
+								else if (y == endY && endX > x)
+								{
+									// Block Space to left of Keypiece
+									if (endX > x)
+									{
+										--endX;
+										if (executeBlock(endX, endY, true))
+										{
+											return true;
+										}
+									}
+								}
+								// If its a Horizontal attack and end is lower than start
+								else if (y == endY && endX < x)
+								{
+									++endX;
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+							}
+							// If its a forward -> lateral attack
+							else if (direction == 1)
+							{
+								// Block Space to left of Keypiece
+								if (endX > x)
+								{
+									--endX;
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+								else if (endX < x)
+								{
+									++endX;
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+							}
+							// If its a lateral -> forward
+							else if (direction == 2)
+							{
+								if (endY > y)
+								{
+									endY--;
+									// For a forward or lateral->forward attack set --endY
+									// So block manuever is executed one space below keypiece
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
+								else if (endY < y)
+								{
+									endY++;
+									if (executeBlock(endX, endY, true))
+									{
+										return true;
+									}
+								}
 							}
 						}
-						else if (endY < y)
-						{
-							endY++;
-							if (executeBlock(endX, endY))
-							{
-								return true;
-							}
-						}
+						
+						//if (getPath(x, y, endX, endY, 0, false) || getPath(x, y, endX, endY, 2, false))
+						//{
+						//	if (endY > y)
+						//	{
+						//		endY--;
+						//		// For a forward or lateral->forward attack set --endY
+						//		// So block manuever is executed one space below keypiece
+						//		if (executeBlock(endX, endY, true))
+						//		{
+						//			return true;
+						//		}
+						//	}
+						//	else if (endY < y)
+						//	{
+						//		endY++;
+						//		if (executeBlock(endX, endY, true))
+						//		{
+						//			return true;
+						//		}
+						//	}
 
+						//}
+						//// For a forward->lateral attack
+						//// Check if Human will be attacking from left or right 
+						//// Execute Block on appropriate space
+						//else if (getPath(x, y, endX, endY, 1, false))
+						//{
+						//	// Block Space to left of Keypiece
+						//	if (endX > x)
+						//	{
+						//		--endX;
+						//		if (executeBlock(endX, endY, true))
+						//		{
+						//			return true;
+						//		}
+						//	}
+						//	else if (endX < x)
+						//	{
+						//		++endX;
+						//		if (executeBlock(endX, endY, true))
+						//		{
+						//			return true;
+						//		}
+						//	}
+						//}
 					}
-					// For a forward->lateral attack
-					// Check if Human will be attacking from left or right 
-					// Execute Block on appropriate space
-					else if (getPath(x, y, endX, endY, 1, false))
+				}
+			}
+			// Human move
+			else
+			{
+				// If Die piece is a Computer piece check all possible moves
+				// that can overtake the human keypiece or the keyspace
+				if (tempBoard[y][x].getPlayer() == "C")
+				{
+					// Check if the Computer Piece is the correct
+					// number of spaces from the Human Key Piece
+					if (boardObj->checkNumSpaces(x, y, endX, endY))
 					{
-						// Block Space to left of Keypiece
-						if (endX > x)
+						direction = getDirection(x, y, endX, endY);
+						// If check path is true, then Human has a winning move
+						// Execute block and return true
+						if (direction != -1)
 						{
-							--endX;
-							if (executeBlock(endX, endY))
+							if (direction == 0)
 							{
-								return true;
+								// If its a vertical attack and end is higher than start
+								if (x == endX && endY > y)
+								{
+									endY--;
+									// For a forward attack set --endY
+									// So block manuever is executed one space below keypiece
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
+								// If its a vertical attack and end is lower than start
+								else if (x == endX && endY < y)
+								{
+									endY++;
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
+								// If its a Horizontal attack and end is higher than start
+								else if (y == endY && endX > x)
+								{
+									// Block Space to left of Keypiece
+									if (endX > x)
+									{
+										--endX;
+										if (executeBlock(endX, endY, false))
+										{
+											return true;
+										}
+									}
+								}
+								// If its a Horizontal attack and end is lower than start
+								else if (y == endY && endX < x)
+								{
+									++endX;
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
 							}
-						}
-						else if (endX < x)
-						{
-							++endX;
-							if (executeBlock(endX, endY))
+							// If its a forward -> lateral attack
+							else if (direction == 1)
 							{
-								return true;
+								// Block Space to left of Keypiece
+								if (endX > x)
+								{
+									--endX;
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
+								else if (endX < x)
+								{
+									++endX;
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
+							}
+							// If its a lateral -> forward
+							else if (direction == 2)
+							{
+								if (endY > y)
+								{
+									endY--;
+									// For a forward or lateral->forward attack set --endY
+									// So block manuever is executed one space below keypiece
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
+								else if (endY < y)
+								{
+									endY++;
+									if (executeBlock(endX, endY, false))
+									{
+										return true;
+									}
+								}
 							}
 						}
 					}
@@ -689,8 +933,7 @@ bool Player::protectKeyPiece()
 	return false;
 }
 
-// TODO: Check against Keyspace
-bool Player::executeBlock(int endX, int endY)
+bool Player::executeBlock(int endX, int endY, bool execute)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 	int direction;
@@ -703,19 +946,37 @@ bool Player::executeBlock(int endX, int endY)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
-			if (tempBoard[y][x].getPlayer() == "C")
+			if (execute)
 			{
-				if (boardObj->checkNumSpaces(x, y, endX, endY))
+				if (tempBoard[y][x].getPlayer() == "C")
 				{
-					direction = getDirection(x, y, endX, endY);
-					if (direction != 0)
+					if (boardObj->checkNumSpaces(x, y, endX, endY))
 					{
-						displayMove(x, y, endX, endY, 2, direction);
-						if (getPath(x, y, endX, endY, direction, true))
+						direction = getDirection(x, y, endX, endY);
+						if (direction != -1)
 						{
+							displayMove(x, y, endX, endY, 2, direction);
+							if (getPath(x, y, endX, endY, direction, true))
+							{
+								return true;
+							}
+
+						}
+					}
+				}
+			}
+			else
+			{
+				if (tempBoard[y][x].getPlayer() == "H")
+				{
+					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					{
+						direction = getDirection(x, y, endX, endY);
+						if (direction != -1)
+						{
+							displayHelp(x, y, endX, endY, direction, "block");
 							return true;
 						}
-						
 					}
 				}
 			}
@@ -748,7 +1009,7 @@ bool Player::checkOvertake()
 							if (boardObj->checkNumSpaces(x, y, endX, endY))
 							{
 								direction = getDirection(x, y, endX, endY);
-								if (direction != 0)
+								if (direction != -1)
 								{
 									displayMove(x, y, endX, endY, 3, direction);
 									if (getPath(x, y, endX, endY, direction, true))
@@ -828,7 +1089,116 @@ bool Player::executeBestMove()
 	}
 }
 
+void Player::displayHelp(int startX, int startY, int endX, int endY, int direction, string moveType)
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 
+	// Display Help if a Human Piece can attack KeyPiece
+	if (moveType == "attackPiece")
+	{
+		if (direction == 0)
+		{
+			if (startX == endX)
+			{
+				cout << "***********************************************************************************" << endl;
+				cout << "*                                 Help                                            *" << endl;
+				cout << "*     To attack the key piece and win the game                                    *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
+				cout << "***********************************************************************************" << endl;
+
+
+			}
+			else
+			{
+				cout << "*     To attack the key piece and win the game                                    *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
+			}
+
+		}
+		else if (direction == 1)
+		{
+			cout << "*     To attack the key piece and win the game                                    *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
+		}
+		else if (direction == 2)
+		{
+			cout << "*     To attack the key piece and win the game                                    *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
+		}
+	}
+	else if (moveType == "attackSpace")
+	{
+		if (direction == 0)
+		{
+			if (startX == endX)
+			{
+				cout << "***********************************************************************************" << endl;
+				cout << "*                                 Help                                            *" << endl;
+				cout << "*     To attack the key piece and win the game                                    *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
+				cout << "***********************************************************************************" << endl;
+			}
+			else
+			{
+				cout << "*     To attack the key space and win the game                                    *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
+			}
+
+		}
+		else if (direction == 1)
+		{
+			cout << "*     To attack the key space and win the game                                    *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
+		}
+		else if (direction == 2)
+		{
+			cout << "*     To attack the key space and win the game                                    *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
+		}
+	}
+	else if (moveType == "block")
+	{
+		if (direction == 0)
+		{
+			if (startX == endX)
+			{
+				cout << "***********************************************************************************" << endl;
+				cout << "*                                 Help                                            *" << endl;
+				cout << "*     To perform a blocking move                                                  *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") frontally because it is the most direct clear path" << endl;
+				cout << "***********************************************************************************" << endl;
+			}
+			else
+			{
+				cout << "*     To perform a blocking move                                     *" << endl;
+				cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+				cout << "*     Roll it to location (" << endY << "," << endX << ") laterally because it is the most direct clear path" << endl;
+			}
+
+		}
+		else if (direction == 1)
+		{
+			cout << "*     To perform a blocking move                                   *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") frontally first because a frontal then lateral path is clear" << endl;
+		}
+		else if (direction == 2)
+		{
+			cout << "*     To perform a blocking move                                  *" << endl;
+			cout << "*     Choose die " << tempBoard[startX][startY].displayDie() << " at location (" << startY << "," << startX << ")" << endl;
+			cout << "*     Roll it to location (" << endY << "," << endX << ") laterally first because a lateral then frontal path is clear" << endl;
+		}
+	}
+}
 
 
 

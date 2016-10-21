@@ -172,183 +172,183 @@ bool Board::checkOccupiedSpace(int x, int y, string player)
 	return true;
 }
 
-// Returns false if path is blocked, true if clear
-bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
-{
-	string player = gameboard[startY][startX].getPlayer();
-	
-
-	if (player == "H")
-	{
-		// If there is no lateral movement
-		// Check the vertical path for obstructing Die pieces
-		if (direction == 0)
-		{
-			// Loop through every Y coordinate of the planned path
-			// If a space is occupied by any Die return false
-			for (startY++; startY <= endY; startY++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
-					{
-						return true;
-					}
-					return false;
-				}
-
-			}
-
-			return true;
-		}
-		// If forward movement is first
-		// Check Y movement then X movement
-		else if (direction == 1)
-		{
-			for (startY++; startY <= endY; startY++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-			}
-
-			for (startX; startX <= endX; startX++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startX == endX && gameboard[endY][endX].getPlayer() == "C")
-					{
-						return true;
-					}
-					return false;
-				}
-			}
-
-			return true;
-		}
-		// If lateral movement is first
-		// Check X movement first then Y movement
-		else
-		{
-			for (startX++; startX <= endX; startX++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-			}
-
-			for (startY; startY <= endY; startY++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
-					{
-						return true;
-					}
-					return false;
-				}
-			}
-
-			return true;
-		}
-	}
-	// Check Computer Path
-	else
-	{
-		// If there is no lateral movement
-		// Check the vertical path for obstructing Die pieces
-		if (direction == 0)
-		{
-			// Loop through every Y coordinate of the planned path
-			// If a space is occupied by any Die return false
-			for (startY--; startY >= endY; startY--)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
-					{
-						return true;
-					}
-					return false;
-				}
-			}
-
-			return true;
-		}
-		// If forward movement is first
-		// Check Y movement then X movement
-		else if (direction == 1)
-		{
-			bool first = true;
-			int loopVar = startY;
-			for (loopVar; loopVar >= endY; loopVar--)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				startY--;
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-			}
-			for (startX; startX <= endX; startX++)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startX == endX && gameboard[endY][endX].getPlayer() == "H")
-					{
-						return true;
-					}
-					return false;
-				}
-			}
-
-			return true;
-		}
-		// If lateral movement is first
-		// Check X movement first then Y movement
-		else
-		{
-			bool first = true;
-			int loopVar = startX;
-			for (loopVar; loopVar <= endX; loopVar++)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				startX++;
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-				cout << startX << endl;
-			}
-
-			for (startY; startY >= endY; startY--)
-			{
-				if (!gameboard[startY][startX].isEmpty())
-				{
-					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
-					{
-						return true;
-					}
-					return false;
-				}
-			}
-
-			return true;
-		}
-	}
-
-	return false;
-}
+//// Returns false if path is blocked, true if clear
+//bool Board::checkPath(int startX, int startY, int endX, int endY, int direction)
+//{
+//	string player = gameboard[startY][startX].getPlayer();
+//	
+//
+//	if (player == "H")
+//	{
+//		// If there is no lateral movement
+//		// Check the vertical path for obstructing Die pieces
+//		if (direction == 0)
+//		{
+//			// Loop through every Y coordinate of the planned path
+//			// If a space is occupied by any Die return false
+//			for (startY++; startY <= endY; startY++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//
+//			}
+//
+//			return true;
+//		}
+//		// If forward movement is first
+//		// Check Y movement then X movement
+//		else if (direction == 1)
+//		{
+//			for (startY++; startY <= endY; startY++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					return false;
+//				}
+//			}
+//
+//			for (startX; startX <= endX; startX++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startX == endX && gameboard[endY][endX].getPlayer() == "C")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//		// If lateral movement is first
+//		// Check X movement first then Y movement
+//		else
+//		{
+//			for (startX++; startX <= endX; startX++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					return false;
+//				}
+//			}
+//
+//			for (startY; startY <= endY; startY++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startY == endY && gameboard[endY][endX].getPlayer() == "C")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//	}
+//	// Check Computer Path
+//	else
+//	{
+//		// If there is no lateral movement
+//		// Check the vertical path for obstructing Die pieces
+//		if (direction == 0)
+//		{
+//			// Loop through every Y coordinate of the planned path
+//			// If a space is occupied by any Die return false
+//			for (startY--; startY >= endY; startY--)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//		// If forward movement is first
+//		// Check Y movement then X movement
+//		else if (direction == 1)
+//		{
+//			bool first = true;
+//			int loopVar = startY;
+//			for (loopVar; loopVar >= endY; loopVar--)
+//			{
+//				if (first)
+//				{
+//					first = false;
+//					continue;
+//				}
+//				startY--;
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					return false;
+//				}
+//			}
+//			for (startX; startX <= endX; startX++)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startX == endX && gameboard[endY][endX].getPlayer() == "H")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//		// If lateral movement is first
+//		// Check X movement first then Y movement
+//		else
+//		{
+//			bool first = true;
+//			int loopVar = startX;
+//			for (loopVar; loopVar <= endX; loopVar++)
+//			{
+//				if (first)
+//				{
+//					first = false;
+//					continue;
+//				}
+//				startX++;
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					return false;
+//				}
+//				cout << startX << endl;
+//			}
+//
+//			for (startY; startY >= endY; startY--)
+//			{
+//				if (!gameboard[startY][startX].isEmpty())
+//				{
+//					if (startY == endY && gameboard[endY][endX].getPlayer() == "H")
+//					{
+//						return true;
+//					}
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
 
 // Function to make sure the end coordinates are the correct
 // number of spaces away from the start coordinates
@@ -377,7 +377,123 @@ bool Board::checkNumSpaces(int startX, int startY, int endX, int endY)
 }
 
 
+// Create die based off given top number for loading game
+// Die[top, bottom, left, right, front, back]
+Die * Board::dieSwitch(int topNum, int rightNum, string player)
+{
+	Die * d = new Die();
 
+	switch (topNum)
+	{
+	case 1:
+		switch (rightNum)
+		{
+		case 1:
+			d = d->createDie(topNum, rightNum, 1, 1, player);
+			break;
+		case 2:
+			d = d->createDie(topNum, rightNum, 3, 4, player);
+			break;
+		case 3:
+			d = d->createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 4:
+			d = d->createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 5:
+			d = d->createDie(topNum, rightNum, 4, 3, player);
+			break;
+		}
+		break;
+	case 2:
+		switch (rightNum)
+		{
+		case 1:
+			d = d->createDie(topNum, rightNum, 4, 3, player);
+			break;
+		case 3:
+			d = d->createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 4:
+			d = d->createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 6:
+			d = d->createDie(topNum, rightNum, 3, 4, player);
+			break;
+		}
+		break;
+	case 3:
+		switch (rightNum)
+		{
+		case 1:
+			d = d->createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 2:
+			d = d->createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 5:
+			d = d->createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 6:
+			d = d->createDie(topNum, rightNum, 5, 2, player);
+			break;
+		}
+		break;
+	case 4:
+		switch (rightNum)
+		{
+		case 1:
+			d = d->createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 2:
+			d = d->createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 5:
+			d = d->createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 6:
+			d = d->createDie(topNum, rightNum, 2, 5, player);
+			break;
+		}
+		break;
+	case 5:
+		switch (rightNum)
+		{
+		case 1:
+			d = d->createDie(topNum, rightNum, 3, 4, player);
+			break;
+		case 3:
+			d = d->createDie(topNum, rightNum, 6, 1, player);
+			break;
+		case 4:
+			d = d->createDie(topNum, rightNum, 1, 6, player);
+			break;
+		case 6:
+			d = d->createDie(topNum, rightNum, 4, 3, player);
+			break;
+		}
+		break;
+	case 6:
+		switch (rightNum)
+		{
+		case 2:
+			d = d->createDie(topNum, rightNum, 4, 3, player);
+			break;
+		case 3:
+			d = d->createDie(topNum, rightNum, 2, 5, player);
+			break;
+		case 4:
+			d = d->createDie(topNum, rightNum, 5, 2, player);
+			break;
+		case 5:
+			d = d->createDie(topNum, rightNum, 3, 4, player);
+			break;
+		}
+		break;
+	}
+
+	return d;
+}
 
 
 

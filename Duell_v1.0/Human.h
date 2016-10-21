@@ -8,7 +8,6 @@ public:
 	Human();
 	~Human();
 	Board * play();
-	int getWin() { return humanWin; }
 	void setCoordinates(int, int, int, int, int);
 	void getCoordinates();
 	int getStartXCoordinate() { return startX; }

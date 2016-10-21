@@ -15,24 +15,22 @@ public:
 	bool checkOOB(int, int);
 	bool validateMove(int, int, int, int, int, string);
 	vector<int> getKeypieceLoc(string);
-	void setWin(string);
-	virtual int getWin() = 0;
 	bool checkHumanWin();
 	bool checkComputerWin();
-
 	int getDirection(int, int, int, int);
 	bool getPath(int, int, int, int, int, bool);
 	bool checkVerticalPath(int, int, int, int, bool);
 	bool checkHorizontalPath(int, int, int, int, bool);
 	void displayMove(int, int, int, int, int, int);
-
+	void help();
+	void displayHelp(int, int, int, int, int, string);
 
 	// Computer AI Functions
 	// First Pass
-	bool keyPieceAttack(string);
+	bool keyPieceAttack(string, bool);
 	// Second Pass
-	bool protectKeyPiece();
-	bool executeBlock(int, int);
+	bool protectKeyPiece(string, bool);
+	bool executeBlock(int, int, bool);
 	// Third Pass
 	// Check for move that will overtake an opponent's piece
 	bool checkOvertake();
@@ -41,8 +39,5 @@ public:
 	bool executeBestMove();
 protected:
 	Board * boardObj;
-	int humanWin;
-	int computerWin;
-
 };
 

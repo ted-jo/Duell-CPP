@@ -17,12 +17,17 @@ public:
 	bool savePrompt(string);
 	void loadGame();
 	string firstPlayer();
+	void setWinLoad(int, int);
+	bool setWin(string player);
+	int getHumanWins() { return humanWin; }
+	int getComputerWins() { return computerWin; }
 private:
 	Human * humanObj;
 	Computer * computerObj;
 	Board * boardObj;
 	boardView * boardViewObj;
 	bool endGame = false;
-
+	int humanWin;
+	int computerWin;
 };
 

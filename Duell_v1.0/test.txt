@@ -12,4 +12,4 @@ Computer Wins: 3
 
 Human Wins: 0
 
-Next Player: Computer
+Next Player: Human

@@ -17,7 +17,6 @@ public:
 	void lateralLeftMove();
 	bool isEmpty();
 	Die* createStartingDie(Die *, int, int, string);
-	Die* dieSwitch(int, int, string);
 	Die* createDie(int, int, int, int, string);
 	Die* createBlankDie(Die *);
 
