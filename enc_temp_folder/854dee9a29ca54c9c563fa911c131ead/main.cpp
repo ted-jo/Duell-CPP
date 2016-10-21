@@ -38,9 +38,10 @@ int main(int argc, char *argv[])
 		cout << "          |                Welcome to Duell!                |" << endl;
 		cout << "          |             Please Select an Option             |" << endl;
 		cout << "          |                                                 |" << endl;
-		cout << "          |     1. Start a New Tournament                   |" << endl;
-		cout << "          |     2. Load a Saved Game                        |" << endl;
-		cout << "          |     3. Quit                                     |" << endl;
+		cout << "          |     1. Start a New Game                         |" << endl;
+		cout << "          |     2. Start a New Tournament                   |" << endl;
+		cout << "          |     3. Load a Saved Game                        |" << endl;
+		cout << "          |     4. Quit                                     |" << endl;
 		cout << "          +=================================================+" << endl;
 		cout << endl;
 		cout << "           Selection: ";
@@ -51,30 +52,35 @@ int main(int argc, char *argv[])
 		{
 		case '1' :
 		{
+			// Start a new game
+			Game * game = new Game();
+			game->startGame();
+			break;
+		}
+		case '2' :
+		{
 			// Start a new Tournament
 			Tournament * tournament = new Tournament();
 			tournament->startTournament();
 			break;
 		}
-		case '2' :
+		case '3' :
 		{
 			// Load a Saved Game
 			Tournament * tournament = new Tournament();
 			tournament->loadGame();
 			break;
 		}
-		case '3' :
-		{
+		case '4' :
 			// Quit Game
 			break;
-		}
 		default :
 			// Return to top of loop on invalid input
 			cout << "Incorrect input!" << endl;
 			cout << "Please try again" << endl << endl;
 			break;
 		}
-	} while (choice != '3');
+	} while (choice != '4');
 
 
 	cout << endl;

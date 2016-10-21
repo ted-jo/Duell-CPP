@@ -473,7 +473,6 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	if (moveType == 1)
 	{
 		// Display results for keypiece attack algorithm
-		cout << ""
 		cout << "*The Computer has Picked " << tempBoard[startY][startX].displayDie() << " at (" << displayY << "," << displayX << ") to roll because this Die can win the game" << endl;
 
 	}
