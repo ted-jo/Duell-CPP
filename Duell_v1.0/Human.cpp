@@ -1,3 +1,10 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Human.h"
 #include "Game.h"
 
@@ -13,6 +20,13 @@ Human::~Human()
 {
 }
 
+/* *********************************************************************
+Function Name: play
+Purpose: Execute a round for the Human player
+Parameters: None
+Return Value: Pointer to board object
+Assistance Received: none
+********************************************************************* */
 Board * Human::play()
 {
 	cout << "Its You're Turn!" << endl;
@@ -23,6 +37,14 @@ Board * Human::play()
 	return boardObj;
 }
 
+/* *********************************************************************
+Function Name: setCoordinates
+Purpose: Set the coordinates mutator
+Parameters:
+	startXCoord, startYCood, endXCoord, endYCoord, ints containing the start and end coordinates
+Return Value: void
+Assistance Received: none
+********************************************************************* */
 void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int endYCoord, int directionInput)
 {
 	startX = startXCoord;
@@ -33,6 +55,22 @@ void Human::setCoordinates(int startXCoord, int startYCoord, int endXCoord, int 
 
 }
 
+/* *********************************************************************
+Function Name: getCoordinates
+Purpose: Ask the player for the start and end coordinates and verify selection
+Parameters: None
+Return Value: void
+Local Variables:
+	x, y, endX, endY, ints containing the start and end coordinates
+	directionInput, int with the user inputted direction
+Algorithm:
+1) Get the coodinates from user
+2) Get direction from user
+3) Set all coordinates -1 to match with vector indexes 
+4) Validate the input to ensure its a legal move
+5) Set Coordinates
+Assistance Received: none
+********************************************************************* */
 void Human::getCoordinates()
 {
 	int x, y, endX, endY, directionInput;

@@ -1,12 +1,25 @@
-/*
-* Driver for the game
-*/
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
+
 #include "stdafx.h"     // Contains the pre-compiled headers.
 #include "Game.h"
 #include "Tournament.h"
 #include <stdio.h>
 
-
+/* *********************************************************************
+Function Name: main
+Purpose: Start the program and ask user for start option
+Parameters: None
+Algorithm:
+1) Ask user to select game start option
+2) Create a tournament object and start the game
+Assistance Received: none
+********************************************************************* */
 int main(int argc, char *argv[])
 {
 	// Switch Statement Choice

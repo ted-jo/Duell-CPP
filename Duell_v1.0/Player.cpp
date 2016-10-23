@@ -1,3 +1,10 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Player.h"
 
 
@@ -5,6 +12,16 @@ Player::Player()
 {
 }
 
+/* *********************************************************************
+Function Name: setBoard
+Purpose: Board Object Mutator
+Parameters:
+Pointer to a board object
+Return Value: void
+Algorithm:
+1) Set boardObj
+Assistance Received: none
+********************************************************************* */
 void Player::setBoard(Board * board)
 {
 	boardObj = board;

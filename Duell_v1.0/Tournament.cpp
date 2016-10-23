@@ -1,8 +1,22 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Tournament.h"
 #include "stdafx.h"
 
 
-
+/* *********************************************************************
+Function Name: Tournament
+Purpose: Construct Tournament Object
+Algorithm:
+1) Create new game object
+2) Create new board object
+Assistance Received: none
+********************************************************************* */
 Tournament::Tournament()
 {
 	gameObj = new Game();
@@ -10,12 +24,35 @@ Tournament::Tournament()
 
 }
 
+/* *********************************************************************
+Function Name: ~Tournament
+Purpose: destruct Tournament Object
+Algorithm:
+1) delete game object
+2) delete board object
+Assistance Received: none
+********************************************************************* */
 Tournament::~Tournament()
 {
 	delete gameObj;
 	delete boardObj;
 }
 
+/* *********************************************************************
+Function Name: displayWinner
+Purpose: Display the winner of the tournament
+Parameters: None
+Return Value: void
+Local Variables:
+	computerWins, an int containing the total number of computer wins
+	humanWins, an int containing the total number of human wins
+	winner, string containing the winner message
+Algorithm:
+1) Check if computerWins > humanWins or vice versa
+2)	Set appropriate winner string
+3) Display the total number of wins each and the winner string
+Assistance Received: none
+********************************************************************* */
 void Tournament::displayWinner()
 {
 	int computerWins = gameObj->getComputerWins();
@@ -45,6 +82,25 @@ void Tournament::displayWinner()
 
 
 }
+
+/* *********************************************************************
+Function Name: startTournament
+Purpose: Start a round of the tournament
+Parameters: None
+Return Value: void
+Local Variables:
+	player, string containing the player who goes first
+	endGame, bool flipped at end of game to break from loop
+Algorithm:
+1) Run firstPlayer function to get player who goes first
+2) Set the boardObj to the game class
+3) Loop until endGame is true
+4)		execute a round in the player class
+5) At end of round, ask player if they would like to play again
+6) Reset the board
+7) Recursively run startTournament again
+Assistance Received: none
+********************************************************************* */
 void Tournament::startTournament()
 {
 	// Get who's playing first
@@ -72,6 +128,13 @@ void Tournament::startTournament()
 
 }
 
+/* *********************************************************************
+Function Name: playAgain
+Purpose: Ask the player if they would like to play again, if not display winner
+Parameters: None
+Return Value: return true to start another game
+Assistance Received: none
+********************************************************************* */
 bool Tournament::playAgain()
 {
 	char input;
@@ -99,6 +162,32 @@ bool Tournament::playAgain()
 	} while (input != 'y');
 }
 
+
+/* *********************************************************************
+Function Name: loadGame
+Purpose: Load a game from a save file
+Parameters: None
+Return Value: void
+Local Variables:
+	file, fstream object which contains the loaded file
+	fileVec, 2D vector of strings which holds all the loaded gameboard in string form
+	gameBoard, 2D vector of die which holds all the loaded gameboard in die form
+	nextPlayer, string holding next player from the file
+	fileName, string containing the file name to open
+	iss, istringstream to parse out the file
+Algorithm:
+1) Get Filename
+2) Open File
+3) Loop until end of file
+4) Using istringstream push each position on the board to the fileVec
+5) When the board is complete get the number of wins and the next player
+6) Loop through the fileVec parsing out the die
+7) Using that data calculate all sides and create a new die
+8) Push that to the correct position on the gameboard
+9) Set the board in the game class
+10) Call startFromLoad
+Assistance Received: none
+********************************************************************* */
 void Tournament::loadGame()
 {
 	fstream file;
@@ -214,6 +303,22 @@ void Tournament::loadGame()
 
 }
 
+/* *********************************************************************
+Function Name: startFromLoad
+Purpose: Start the round from a loaded state
+Parameters:
+	player, string containing the player who goes first
+Return Value: void
+Local Variables: None
+Algorithm:
+1) Set the boardObj to the game class
+2) Loop until endGame is true
+3)		execute a round in the player class with the given nextPlayer
+4) At end of round, ask player if they would like to play again
+5) Reset the board
+6) Recursively run startTournament again
+Assistance Received: none
+********************************************************************* */
 void Tournament::startFromLoad(string player)
 {
 	bool endGame = false;
@@ -236,6 +341,12 @@ void Tournament::startFromLoad(string player)
 	}
 }
 
+/* *********************************************************************
+Function Name: setBoard
+Purpose: Create a new board obj and set for new game
+Return Value: void
+Assistance Received: none
+********************************************************************* */
 void Tournament::setBoard()
 {
 	Board * newBoard = new Board();

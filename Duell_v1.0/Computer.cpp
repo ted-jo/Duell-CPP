@@ -1,3 +1,10 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Computer.h"
 
 
@@ -11,6 +18,21 @@ Computer::~Computer()
 {
 }
 
+/* *********************************************************************
+Function Name: play
+Purpose: Virtual function that executes the AI move
+Parameters: None
+Return Value: Pointer to a board object
+Local Variables: None
+Algorithm:
+1) Check if AI can attack keypiece
+2) Check if AI can block a keypiece attack
+3) Check if AI can block a keyspace attack
+4) Check if AI can overtake a piece
+5) Check if AI can execute best move available
+6) return the boardObj
+Assistance Received: none
+********************************************************************* */
 Board * Computer::play()
 {
 	cout << "Its the Computer's Turn!" << endl;

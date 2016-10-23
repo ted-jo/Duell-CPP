@@ -1,7 +1,24 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Game.h"
 
 
-
+/* *********************************************************************
+Function Name: Game
+Purpose: Construct Game Object
+Algorithm:
+1) Create new Human Object
+2) Create new Computer Object
+3) Create new BoardView Object
+4) set humanwin & computerWin to 0
+5) set endgame to false
+Assistance Received: none
+********************************************************************* */
 Game::Game()
 {
 	humanObj = new Human();
@@ -12,7 +29,16 @@ Game::Game()
 	endGame = false;
 }
 
-
+/* *********************************************************************
+Function Name: ~Game
+Purpose: Deconstruct Game Object
+Algorithm:
+1) Delete Human Object
+2) Delete Computer Object
+3) Delete BoardView Object
+4) Delete Board Object
+Assistance Received: none
+********************************************************************* */
 Game::~Game()
 {
 	delete humanObj;
@@ -21,11 +47,59 @@ Game::~Game()
 	delete boardViewObj;
 }
 
+/* *********************************************************************
+Function Name: setBoard
+Purpose: Board Object Mutator
+Parameters:
+	Pointer to a board object
+Return Value: void
+Algorithm:
+1) Set boardObj
+Assistance Received: none
+********************************************************************* */
 void Game::setBoard(Board * board)
 {
 	boardObj = board;
 }
 
+/* *********************************************************************
+Function Name: setWinLoad
+Purpose: Mutator for computer wins and human wins
+Parameters:
+	computerWins, an int containing the number of computer wins
+	humanWins, an int containing the number of human wins
+Return Value: void
+Algorithm:
+1) Set computerWins
+2) Set humanWins
+Assistance Received: none
+********************************************************************* */
+void Game::setWinLoad(int computerWins, int humanWins)
+{
+	computerWin = computerWins;
+	humanWin = humanWins;
+}
+
+
+/* *********************************************************************
+Function Name: saveGame
+Purpose: To save the game to a file
+Parameters:
+	nextPlayer, string containing the next player
+Return Value: void
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	file, ostream object to save the file
+	fileName, string containing the filename
+Algorithm:
+1) Get filename from user
+2) Loop through gameboard
+3) Save 0 to file if space is empty
+4) Save die to file if space is occupied
+5) Save all the wins and the next player
+6) Close file
+Assistance Received: none
+********************************************************************* */
 void Game::saveGame(string nextPlayer)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -63,6 +137,14 @@ void Game::saveGame(string nextPlayer)
 	file.close();
 }
 
+/* *********************************************************************
+Function Name: savePrompt
+Purpose: Ask user if they would like to save
+Parameters:
+	nextPlayer, string containing the next player
+Return Value: return true if user wishes to save
+Assistance Received: none
+********************************************************************* */
 bool Game::savePrompt(string nextPlayer)
 {
 	char input;
@@ -276,12 +358,17 @@ string Game::firstPlayer()
 	} while (human == computer);
 }
 
-void Game::setWinLoad(int computerWins, int humanWins)
-{
-	computerWin = computerWins;
-	humanWin = humanWins;
-}
 
+/* *********************************************************************
+Function Name: setWin
+Purpose: Add a win to the player who has won the game
+Parameters:
+	player, string containing the player
+Return Value: return true on successful execution
+Algorithm:
+1) Set win++ depending on the player passed
+Assistance Received: none
+********************************************************************* */
 bool Game::setWin(string player)
 {
 	if (player == "H")
@@ -304,6 +391,13 @@ bool Game::setWin(string player)
 	return false;
 }
 
+/* *********************************************************************
+Function Name: askHel
+Purpose: Prompt the user if they need help
+Parameters: None
+Return Value: Void
+Assistance Received: none
+********************************************************************* */
 void Game::askHelp()
 {
 	char input;
@@ -331,6 +425,13 @@ void Game::askHelp()
 	} while (input != 'y');
 }
 
+/* *********************************************************************
+Function Name: setEndGame
+Purpose: Flip the endGame condition when called to end or start the game
+Parameters: None
+Return Value: void
+Assistance Received: none
+********************************************************************* */
 void Game::setEndGame()
 {
 	if (endGame = false)

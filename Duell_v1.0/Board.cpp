@@ -1,3 +1,10 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "Board.h"
 #include "Die.h"
 #include "stdafx.h"
@@ -73,6 +80,14 @@ Board::~Board()
 {
 }
 
+/* *********************************************************************
+Function Name: setDie
+Purpose: gameboard 2D vector Mutator
+Parameters:
+baord, vector<vector<int>> containing the board
+Return Value: void
+Assistance Received: none
+********************************************************************* */
 void Board::setBoard(vector<vector<Die>> board)
 {
 	gameboard = board;
