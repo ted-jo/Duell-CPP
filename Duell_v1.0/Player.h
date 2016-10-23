@@ -10,8 +10,12 @@ public:
 	~Player() { delete boardObj; }
 	// Play is virtual so its overwritten in Human and Player. It will control a single turn of play
 	virtual Board * play() = 0;
+	// Accessor function
 	Board getBoard() const { return * boardObj; }
+	// Mutator function
 	void setBoard(Board *);
+
+	// Logic Functions
 	bool checkOOB(int, int);
 	bool validateMove(int, int, int, int, int, string);
 	vector<int> getKeypieceLoc(string);
@@ -24,9 +28,11 @@ public:
 	void displayMove(int, int, int, int, int, int);
 	void help();
 	void displayHelp(int, int, int, int, int, string);
+	bool checkNumSpaces(int, int, int, int);
+	bool checkOccupiedSpace(int, int, string);
 
-	// Computer AI Functions
-	// First Pass
+
+	// ***** AI Functions *****
 	// Check if Piece can attack the key piece or key space
 	bool keyPieceAttack(string, bool);
 	// Second Pass

@@ -1,8 +1,6 @@
 #include "Player.h"
 
 
-
-
 Player::Player()
 {
 }
@@ -12,7 +10,16 @@ void Player::setBoard(Board * board)
 	boardObj = board;
 }
 
-// Function checks to make sure coordinates are not out of bounds
+
+/* *********************************************************************
+Function Name: checkOOB
+Purpose: Function checks to make sure coordinates are not out of bounds
+Parameters:
+	x & y, ints containing the coordinates of the piece to move
+Return Value: return true if move is in bounds
+Local Variables: None
+Assistance Received: none
+********************************************************************* */
 bool Player::checkOOB(int x, int y)
 {
 	// Check if x or y coordinate is out of the 2D vector bounds on the upper end
@@ -29,10 +36,29 @@ bool Player::checkOOB(int x, int y)
 	return true;
 }
 
+
+/* *********************************************************************
+Function Name: validateMove
+Purpose: Function takes all the data about the pending move and prints 
+			an error if it is not a legal move
+Parameters:
+	startX, startY, endX, endY, ints containing the start and end coordinates
+	direction, int signifying the direction the piece will travel
+	player, string containing the player
+Return Value: return true if it's a legal move
+Local Variables: None
+Algorithm:
+1) If startX and startY coordinates are out of bounds return false
+2) If endX and endY coordinates are out of bound return false
+3) If there's no valid piece on the space return false
+4) If the start coordinates are not the correct number of moves away
+from the end coordinates return false
+5) If the path is blocked return false
+6) return true
+Assistance Received: none
+********************************************************************* */
 bool Player::validateMove(int startX, int startY, int endX, int endY, int direction, string player)
 {
-	bool validation = true;
-
 	// Check if starting coordinates are out of bounds
 	if (!checkOOB(startX, startY))
 	{
@@ -40,7 +66,7 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 		cout << "*  Error: Starting Coordinates Out of Bounds     *" << endl;
 		cout << "*  Please Select New Coordinates                 *" << endl;
 		cout << "**************************************************" << endl;
-		validation = false;
+		return false;
 	}
 	// Check if ending coordinates are out of bounds
 	else if (!checkOOB(endX, endY))
@@ -49,27 +75,27 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 		cout << "*  Error: Ending Coordinates Out of Bounds       *" << endl;
 		cout << "*  Please Select New Coordinates                 *" << endl;
 		cout << "**************************************************" << endl;
-		validation = false;
+		return false;
 	}
 	// Check if theres a valid die piece on the starting location
-	else if (!boardObj->checkOccupiedSpace(startX, startY, player))
+	else if (!checkOccupiedSpace(startX, startY, player))
 	{
 		cout << "**************************************************" << endl;
 		cout << "*  Error: No Valid Piece on Starting Coordinates *" << endl;
 		cout << "*  Please Select New Coordinates                 *" << endl;
 		cout << "**************************************************" << endl;
-		validation = false;
+		return false;
 	}
 	// Check if the end coordinates are the correct number of spaces 
 	// away from the starting coordinates
-	else if (!boardObj->checkNumSpaces(startX, startY, endX, endY))
+	else if (!checkNumSpaces(startX, startY, endX, endY))
 	{
 		cout << "*****************************************************" << endl;
 		cout << "*  Error: End Coordinates Out of Range of Movement  *" << endl;
 		cout << "*  Please Select New Coordinates                    *" << endl;
 		cout << "*****************************************************" << endl;
 
-		validation = false;
+		return false;
 	}
 	// Check if there are any pieces blocking move
 	else if(!getPath(startX, startY, endX, endY, direction, false))
@@ -79,28 +105,125 @@ bool Player::validateMove(int startX, int startY, int endX, int endY, int direct
 		cout << "*  Please Select New Coordinates                    *" << endl;
 		cout << "*****************************************************" << endl;
 
-		validation = false;
+		return false;
 	}
 
 
-	return validation;
+	return true;
 }
 
-// Function finds either the Human or computer keypiece and
-// stores the coordinates in a vector
+/* *********************************************************************
+Function Name: checkNumSpaces
+Purpose: To check if start (x, y) is correct number of spaces from end (x, y)
+			based off the top number of the starting piece
+Parameters:
+	startX & startY, integers containing the start X/Y positions
+	endx & endY, integers containing the end X/Y positions
+Return Value: bool, return true if they are the correct number of spaces away
+Local Variables:
+	vector<int> die, a temp holder for the positions of a die
+	int move, takes the [0] index of die which is topNum == number of moves
+	int tempX, tempY, tempXY, used to store the value of the start X/Y - endX/Y
+		which shows us how many spaces they are from each other
+Algorithm:
+1) Fill in vector<int> die with the die from the [startY][startX] location on the gameboard
+2) Set int move to the [0] location on the die
+3) Subtract the end point by the starting point and take absolute value
+4) Add together to get total number of spaces away
+5) If number of moves allowed == number of spaces away --> return true
+6) else return false
+Assistance Received: none
+********************************************************************* */
+// Function to make sure the end coordinates are the correct
+// number of spaces away from the start coordinates
+bool Player::checkNumSpaces(int startX, int startY, int endX, int endY)
+{
+	int tempX, tempY, tempXY;
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	vector<int> die = tempBoard[startY][startX].getDie();
+	// Get number of moves allowed
+	int move = die[0];
+
+	// Subtract the end point by the starting point and take absolute value
+	// When added together it equals the total number of moves allowed
+	tempX = endX - startX;
+	tempY = endY - startY;
+	tempX = abs(tempX);
+	tempY = abs(tempY);
+	tempXY = tempX + tempY;
+	if (tempXY == move)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+/* *********************************************************************
+Function Name: checkOccupiedSpace
+Purpose: Check if the start coordinates contains a die of the correct player
+Parameters:
+x, y, two ints containing the start x/y coordinates
+player, a string containing the player who called it
+Local Variables: None
+Algorithm:
+1) Check if the gameboard is empty at [y][x]
+2)		If true return false
+3) If it's not empty check to make sure it's one of your pieces
+4) Return true if its not empty and it is one of your Dies
+Assistance Received: none
+********************************************************************* */
+bool Player::checkOccupiedSpace(int x, int y, string player)
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+
+	if (tempBoard[y][x].isEmpty())
+	{
+		return false;
+	}
+	// Check if Player is moving correct Die
+	else if (player != tempBoard[y][x].getPlayer())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+/* *********************************************************************
+Function Name: getKeyPieceLoc
+Purpose: Given the player find its opponent's keypiece
+Parameters:
+	player, string containing player who's executing the function
+Return Value: vector<int> with vec[0] = x coord and vec[1] = y coord
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	location, vector<int> which is the return vector
+Algorithm:
+1) Loop through the board
+2) if the current position contains an opponent's die and it's the keypiece
+3)		push the x & y coord to location
+4) return location
+Assistance Received: none
+********************************************************************* */
 vector<int> Player::getKeypieceLoc(string player)
 {
 	vector<int> location;
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 
+	// Loop through board
 	for (int y = 0; y <= 7; y++)
 	{
 		for (int x = 0; x <= 8; x++)
 		{
 			if (player == "C")
 			{
+				// If the location is an opponents die and it's the keypiece
 				if (tempBoard[y][x].getPlayer() == "H" && tempBoard[y][x].getKeyPiece() == true)
 				{
+					// push the x & y coord to location
 					location.push_back(x);
 					location.push_back(y);
 				}
@@ -119,12 +242,25 @@ vector<int> Player::getKeypieceLoc(string player)
 	return location;
 }
 
+/* *********************************************************************
+Function Name: checkHumanWin
+Purpose: Check if Human player won the game
+Parameters: None
+Return Value: return true if Human win conditions are met
+Local Variables:
+		tempBoard, vector<vector<Die>> which is filled with the current state of the board
+Algorithm:
+1) return true if the Computer's keyspace is taken by the human key piece
+2) return true if the vector returned by getKeypieceLoc is size 0
+		this occurs when the opponents keypiece has been eliminated
+Assistance Received: none
+********************************************************************* */
 bool Player::checkHumanWin()
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 
-	// Check if the key square has been overtaken set win for Human
-	if (tempBoard[7][4].getPlayer() == "H")
+	// Check if the key square has been overtaken with keypiece
+	if (tempBoard[7][4].getPlayer() == "H" && tempBoard[7][4].getKeyPiece())
 	{
 		return true;
 	}
@@ -136,12 +272,25 @@ bool Player::checkHumanWin()
 	return false;
 }
 
+/* *********************************************************************
+Function Name: checkComputerWin
+Purpose: return true if Computer win conditions are met
+Parameters: None
+Return Value: return true if Computer win conditions are met
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+Algorithm:
+1) return true if the Human's keyspace is taken by the human key piece
+2) return true if the vector returned by getKeypieceLoc is size 0
+		this occurs when the opponents keypiece has been eliminated
+Assistance Received: none
+********************************************************************* */
 bool Player::checkComputerWin()
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
 
-	// Check if the key square has been overtaken set win for Human
-	if (tempBoard[0][4].getPlayer() == "C")
+	// Check if the key square has been overtaken with keypiece
+	if (tempBoard[0][4].getPlayer() == "C" && tempBoard[0][4].getKeyPiece())
 	{
 		return true;
 	}
@@ -153,8 +302,251 @@ bool Player::checkComputerWin()
 	return false;
 }
 
+/* *********************************************************************
+Function Name: checkVerticalPath
+Purpose: This function either checks or executes the move in the vertical direction
+Parameters:
+startX, startY, endX, endY, ints containing the start and end coordinates
+execute, a bool that determines if the function will actually move the die
+Return Value: returns true if the check or move is complete
+Local Variables:
+tempBoard, vector<vector<Die>> which is filled with the current state of the board
+player, string containing the player at the start location
+oppositePlayer, a bool signifying if an opponents die is at the end location
+first, a bool that flips after the first loop iteration to skip it
+tempY, an int set to 1 +- endY so the check stops before the end space
+Algorithm:
+1) If startY > endY, check the downward movement of the starting piece
+2)		set tempY to 1 above the endX
+3)		Loop starting from StartY as long as startY > endY
+4)			If execute is false, check board at every StartY in loop to see if space is empty
+5)				If the end space is an opposing die on return true so it can overtake
+6)			If execute is true, call the movePieceDown function every iteration of the loop
+7)		return true on successful completion
+8) If startY < endY do opposite and call movePieceUp to move the die up on the board
+Assistance Received: none
+********************************************************************* */
+bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool execute)
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	string player = tempBoard[startY][startX].getPlayer();
+	bool first = true;
+	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
+	int tempY;
+	tempY = endY;
+
+
+	if (startY > endY)
+	{
+		tempY++;
+		for (startY; startY > endY; startY--)
+		{
+			// Only check path no execution of move
+			if (!execute)
+			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				// Return False if path is blocked
+				if (!tempBoard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == endX && startY == tempY && oppositePlayer)
+				{
+					return true;
+				}
+
+			}
+			else
+			{
+				if (startX == endX && startY == tempY && !tempBoard[endY][endX].isEmpty())
+				{
+					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
+				}
+				boardObj->movePieceDown(startX, startY);
+			}
+
+		}
+		// Path is clear or move is executed return true
+		return true;
+	}
+	else if (startY < endY)
+	{
+		tempY--;
+		for (startY; startY < endY; startY++)
+		{
+			if (!execute)
+			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				// Return False if path is blocked
+				if (!tempBoard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == endX && startY == tempY && oppositePlayer)
+				{
+					return true;
+				}
+
+
+
+			}
+			else
+			{
+				if (startX == endX && startY == tempY && !tempBoard[endY][endX].isEmpty())
+				{
+					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
+				}
+				boardObj->movePieceUp(startX, startY);
+			}
+
+		}
+		// Path is clear return true
+		return true;
+	}
+	// Error
+	return false;
+}
+
+/* *********************************************************************
+Function Name: checkHorizontalPath
+Purpose: This function either checks or executes the move in the horizontal direction
+Parameters:
+startX, startY, endX, endY, ints containing the start and end coordinates
+execute, a bool that determines if the function will actually move the die
+Return Value: returns true if the check or move is complete
+Local Variables:
+tempBoard, vector<vector<Die>> which is filled with the current state of the board
+player, string containing the player at the start location
+oppositePlayer, a bool signifying if an opponents die is at the end location
+first, a bool that flips after the first loop iteration to skip it
+tempX, an int set to 1 +- endX so the check stops before the end space
+Algorithm:
+1) If startX > endX, check the lateral left movement of the starting piece
+2)		set tempX to 1 above the endX
+3)		Loop starting from StartY as long as startY > endY
+4)			If execute is false, check board at every StartX in loop to see if space is empty
+5)				If the end space is an opposing die on return true so it can overtake
+6)			If execute is true, call the movePieceLeft function every iteration of the loop
+7)		return true on successful completion
+8) If startX < endX do opposite and call movePieceRight to move the die right on the board
+Assistance Received: none
+********************************************************************* */
+bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, bool execute)
+{
+	vector<vector<Die>> tempBoard = boardObj->GetBoard();
+	string player = tempBoard[startY][startX].getPlayer();
+	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
+	bool first = true;
+	int tempX;
+	tempX = endX;
+
+	if (startX > endX)
+	{
+		tempX++;
+		for (startX; startX > endX; startX--)
+		{
+			if (!execute)
+			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				// Return False if path is blocked
+				if (!tempBoard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == tempX && startY == endY && oppositePlayer)
+				{
+					return true;
+				}
+
+			}
+			else
+			{
+				if (startX == tempX && startY == endY && !tempBoard[endY][endX].isEmpty())
+				{
+					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
+				}
+				boardObj->movePieceLeft(startX, startY);
+			}
+
+		}
+		// Path is clear return true
+		return true;
+	}
+	else if (startX < endX)
+	{
+		tempX--;
+		for (startX; startX < endX; startX++)
+		{
+			if (!execute)
+			{
+				if (first)
+				{
+					first = false;
+					continue;
+				}
+				// Return False if path is blocked
+				if (!tempBoard[startY][startX].isEmpty())
+				{
+					return false;
+				}
+				// If the end space is on an opposing die overtake end space
+				if (startX == tempX && startY == endY && oppositePlayer)
+				{
+					return true;
+				}
+
+			}
+			else
+			{
+				if (startX == tempX && startY == endY && !tempBoard[endY][endX].isEmpty())
+				{
+					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
+				}
+				boardObj->movePieceRight(startX, startY);
+			}
+
+		}
+		// Path is clear return true
+		return true;
+	}
+	// Error
+	return false;
+}
+
+
+/* *********************************************************************
+Function Name: getDirection()
+Purpose: This function finds direction to move with a clear path
+Parameters:
+	startX, startY, endX, endY, ints containing the start and end coordinates
+Return Value: an int which signifies the direction chosen
+Local Variables: None
+Algorithm:
+1) If startX = endX, return 0 if the vertical path is clear
+2) If startY = endY, return 0 if the horizontal path is clear
+3) If the vertical path then the horizontal path is clear, return 1
+4) If the horizontal path then the vertical path is clear, return 2
+5) If no path is clear return -1
+Assistance Received: none
+********************************************************************* */
 int Player::getDirection(int startX, int startY, int endX, int endY)
 {
+	// Return 0 if strictly vertical or strictly horizontal move
 	if (startX == endX)
 	{
 		if (checkVerticalPath(startX, startY, endX, endY, false))
@@ -177,7 +569,7 @@ int Player::getDirection(int startX, int startY, int endX, int endY)
 			return 1;
 		}
 	}
-	// Check  lateral then forward and return 2
+	// Check lateral then forward and return 2
 	if (checkHorizontalPath(startX, startY, endX, endY, false))
 	{
 		if (checkVerticalPath(endX, startY, endX, endY, false))
@@ -185,10 +577,37 @@ int Player::getDirection(int startX, int startY, int endX, int endY)
 			return 2;
 		}
 	}
+	// Return -1 if no paths are clear
 	return -1;
 }
 
-// Checks and executes path
+/* *********************************************************************
+Function Name: getPath
+Purpose: This function has two purposes depending on the execute parameter
+1) If execute is false, simply check the path
+2) If execute is true, the function executes the move to the end coordinates
+Parameters:
+	startX, startY, endX, endY, ints containing the start and end coordinates
+	direction, int signifying the direction the piece will travel
+	execute, a bool that determines if the function will actually move the die
+Return Value:
+	bool, return true at successful completion of path checking or path execution
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	player, string containing the player at the start coordinates
+	endPlayer, string containing the player at the end coordinates
+Algorithm:
+1) If player = endPlayer, the move is invalid since the end space is occupied by
+		a piece of the same player. Return false
+2) If startX == endX, the path is strictly vertical
+3)		If checkVerticalPath(...false) is true, the vertical path is clear. return true
+4)			If execute is true and checkVerticalPath(...true) is true, move executed successfully
+5) If startY == endY, repeat steps 3-4 with checkHorizontalPath instead
+6) If direction == 1 check/execute vertical then horizontal path, return true if successful
+7) If direction == 2 check/execute horizontal then vertical path, return true if successful
+8) return false paths are not clear
+Assistance Received: none
+********************************************************************* */
 bool Player::getPath(int startX, int startY, int endX, int endY, int direction, bool execute)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -284,184 +703,27 @@ bool Player::getPath(int startX, int startY, int endX, int endY, int direction, 
 	return false;
 }
 
-bool Player::checkVerticalPath(int startX, int startY, int endX, int endY, bool execute)
-{
-	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-	string player = tempBoard[startY][startX].getPlayer();
-	bool first = true;
-	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
-	int tempY;
-	tempY = endY;
-	
-
-	if (startY > endY)
-	{
-		tempY++;
-		for (startY; startY > endY; startY--)
-		{
-			// Only check path no execution of move
-			if (!execute)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				// Return False if path is blocked
-				if (!tempBoard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == tempY && oppositePlayer)
-				{
-					return true;
-				}
-
-			}
-			else
-			{
-				if (startX == endX && startY == tempY && !tempBoard[endY][endX].isEmpty())
-				{
-					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
-				}
-				boardObj->movePieceDown(startX, startY);
-			}
-
-		}
-		// Path is clear or move is executed return true
-		return true;
-	}
-	else if(startY < endY)
-	{
-		tempY--;
-		for (startY; startY < endY; startY++)
-		{
-			if (!execute)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				// Return False if path is blocked
-				if (!tempBoard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == endX && startY == tempY && oppositePlayer)
-				{
-					return true;
-				}
-
-
-
-			}
-			else
-			{
-				if (startX == endX && startY == tempY && !tempBoard[endY][endX].isEmpty())
-				{
-					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
-				}
-				boardObj->movePieceUp(startX, startY);
-			}
-
-		}
-		// Path is clear return true
-		return true;
-	}
-	// Error
-	return false;
-}
-
-bool Player::checkHorizontalPath(int startX, int startY, int endX, int endY, bool execute)
-{
-	vector<vector<Die>> tempBoard = boardObj->GetBoard();
-	string player = tempBoard[startY][startX].getPlayer();
-	bool oppositePlayer = tempBoard[endY][endX].oppositePlayer(player);
-	bool first = true;
-	int tempX;
-	tempX = endX;
-	
-	if (startX > endX)
-	{
-		tempX++;
-		for (startX; startX > endX; startX--)
-		{
-			if (!execute)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				// Return False if path is blocked
-				if (!tempBoard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == tempX && startY == endY && oppositePlayer)
-				{
-					return true;
-				}
-
-			}
-			else
-			{
-				if (startX == tempX && startY == endY && !tempBoard[endY][endX].isEmpty())
-				{
-					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
-				}
-				boardObj->movePieceLeft(startX, startY);
-			}
-
-		}
-		// Path is clear return true
-		return true;
-	}
-	else if (startX < endX)
-	{
-		tempX--;
-		for (startX; startX < endX; startX++)
-		{
-			if (!execute)
-			{
-				if (first)
-				{
-					first = false;
-					continue;
-				}
-				// Return False if path is blocked
-				if (!tempBoard[startY][startX].isEmpty())
-				{
-					return false;
-				}
-				// If the end space is on an opposing die overtake end space
-				if (startX == tempX && startY == endY && oppositePlayer)
-				{
-					return true;
-				}
-
-			}
-			else
-			{
-				if (startX == tempX && startY == endY && !tempBoard[endY][endX].isEmpty())
-				{
-					cout << tempBoard[endY][endX].displayDie() << " has been overtaken and removed from play" << endl;
-				}
-				boardObj->movePieceRight(startX, startY);
-			}
-
-		}
-		// Path is clear return true
-		return true;
-	}
-	// Error
-	return false;
-}
-
+/* *********************************************************************
+Function Name: displayMove
+Purpose: Display the Computer's move and explain the reasoning behind it
+Parameters:
+	startX, startY, endX, endY, ints containing the start and end coordinates
+	direction, int signifying the direction the piece will travel
+	moveType, an int signifying the reason behind the move
+Return Value: void
+Local Variables:
+	displayX/Y = used to hold the modifyable coordinates for display
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+Algorithm:
+1) If moveType = 1, Display start die, coords, and key piece attack reasoning
+2) If moveType = 2, Display start die, coords, and block attack reasoning
+3) If moveType = 3, Display start die, coords, and overtake human die reasoning
+4) If not 1, 2, or 3, Display start die, coords and last case reasoning
+5) Then depending on the direction value
+6) Calculate the number of spaces moved in a direction
+7) Print the number of spaces moved in that direction and why it chose that path
+Assistance Received: none
+********************************************************************* */
 void Player::displayMove(int startX, int startY, int endX, int endY, int moveType, int direction)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -524,10 +786,30 @@ void Player::displayMove(int startX, int startY, int endX, int endY, int moveTyp
 	}
 }
 
-
-
-
-
+/* *********************************************************************
+Function Name: keyPieceAttack
+Purpose: First pass of AI algorithm
+	Determines and excutes m a move overtaking the keypiece or keyspace
+Parameters:
+	player, string containing the player
+	display, bool if true it will display help for human player
+Return Value: return true if successful
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	KeyPieceLocation, vector<int> the vector holding the coords of the keypiece
+	endX, endY, ints containing the coordinates of the keypiece
+	direction, int signifying the direction the piece will travel
+Algorithm:
+1) Loop through each space on the board looking for a computer die
+2) Check if that die is the correct number of spaces away from the end coords
+3) Check if a move in any direction is clear
+4) Display the chosen move and reasoning
+5) Execute the move and return true
+6) Do steps 1-5 except make the keyspace the end coords
+7) If a human calls help()
+8) Run steps 2-4 and display results for the human
+Assistance Received: none
+********************************************************************* */
 bool Player::keyPieceAttack(string player, bool display)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -548,7 +830,7 @@ bool Player::keyPieceAttack(string player, bool display)
 				{
 					// Check if the Computer Piece is the correct
 					// number of spaces from the Human Key Piece
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
@@ -561,7 +843,7 @@ bool Player::keyPieceAttack(string player, bool display)
 						}
 					}
 					// Check against the key space
-					else if ((boardObj->checkNumSpaces(x, y, 4, 0)))
+					else if ((checkNumSpaces(x, y, 4, 0)))
 					{
 						direction = getDirection(x, y, 4, 0);
 						// If direction != -1 path is clear in that direction
@@ -584,7 +866,7 @@ bool Player::keyPieceAttack(string player, bool display)
 				{
 					// Check if the Computer Piece is the correct
 					// number of spaces from the Human Key Piece
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
@@ -596,7 +878,7 @@ bool Player::keyPieceAttack(string player, bool display)
 							return true;
 						}
 					}
-					else if ((boardObj->checkNumSpaces(x, y, 4, 7)))
+					else if ((checkNumSpaces(x, y, 4, 7)))
 					{
 						direction = getDirection(x, y, 4, 7);
 						// If direction != -1 path is clear in that direction
@@ -617,10 +899,27 @@ bool Player::keyPieceAttack(string player, bool display)
 	return false;
 }
 
-
-// Second Pass of AI
-// Check if Human player can strike Computer KeyPiece or Keyspace
-// Execute blocking 
+/* *********************************************************************
+Function Name: protectKeyPiece
+Purpose: Second Pass of AI algorithm, move to protect keypiece
+Parameters:
+	player, string containing the player
+	keySpace, bool if true it will block keyspace
+Return Value: return true if successful
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	KeyPieceLocation, vector<int> the vector holding the coords of the keypiece
+	endX, endY, ints containing the coordinates of the keypiece
+	direction, int signifying the direction the piece will travel
+Algorithm:
+1) Set the end coords based on player and if they're checking the keyspace or keypiece
+2) Loop through each space of the board looking for an opponents die
+3) Check if that die is the correct number of moves away from your keyPiece/Space
+4) Check if any path is clear to the end space meaning you're vulnerable for attack
+5) Depending on the direction call executeBlock on the proper end coordinates
+		to check if any of the players pieces can block
+Assistance Received: none
+********************************************************************* */
 bool Player::protectKeyPiece(string player, bool keySpace)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -666,7 +965,7 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 				{
 					// Check if the Human Piece is the correct
 					// number of spaces from the Computer Key Piece
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						// If check path is true, then Human has a winning move
@@ -774,7 +1073,7 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 				{
 					// Check if the Computer Piece is the correct
 					// number of spaces from the Human Key Piece
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						// If check path is true, then Human has a winning move
@@ -878,6 +1177,26 @@ bool Player::protectKeyPiece(string player, bool keySpace)
 	return false;
 }
 
+/* *********************************************************************
+Function Name: executeBlock
+Purpose: If it is found an opponent can attack, check for a possible candidate to block
+Parameters:
+	endX, endY, ints containing the end coordinates
+	bool, true if function should execute the move
+Return Value: return true if successful
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	direction, int signifying the direction the piece will travel
+Algorithm:
+1) Loop through board looking for one of your own die
+2) Check to see if the piece is the correct distance from the end space
+3) Get a direction with a clear path
+4) Display the move
+5) Execute move
+6) Do steps 1-4 if Human is player
+7) Send data to the help function
+Assistance Received: none
+********************************************************************* */
 bool Player::executeBlock(int endX, int endY, bool execute)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -886,7 +1205,6 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 	// Coordinates (endX, endY) is the Computer Keypiece
 	// To find a candidate to block from below
 	// find a Computer piece that can move to endX--
-
 	for (int y = 7; y >= 0; y--)
 	{
 		for (int x = 0; x <= 8; x++)
@@ -895,7 +1213,7 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 			{
 				if (tempBoard[y][x].getPlayer() == "C")
 				{
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
@@ -914,7 +1232,7 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 			{
 				if (tempBoard[y][x].getPlayer() == "H")
 				{
-					if (boardObj->checkNumSpaces(x, y, endX, endY))
+					if (checkNumSpaces(x, y, endX, endY))
 					{
 						direction = getDirection(x, y, endX, endY);
 						if (direction != -1)
@@ -932,6 +1250,24 @@ bool Player::executeBlock(int endX, int endY, bool execute)
 	return false;
 }
 
+
+/* *********************************************************************
+Function Name: checkOvertake
+Purpose: Third pass of AI algorithm, Check if theres a die to overtake
+Parameters:
+	player, string containing the player
+Return Value: return true if successful overtake
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	direction, int signifying the direction the piece will travel
+Algorithm:
+1) Loop through board looking for a die owned by player
+2) Once found, loop through board again looking for die owned by opponent
+3) Check the distance between the two die
+4) Find a direction with a clear path 
+5) Execute move and overtake piece
+Assistance Received: none
+********************************************************************* */
 bool Player::checkOvertake(string player)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -954,7 +1290,7 @@ bool Player::checkOvertake(string player)
 						{
 							if (tempBoard[endY][endX].getPlayer() == "H")
 							{
-								if (boardObj->checkNumSpaces(x, y, endX, endY))
+								if (checkNumSpaces(x, y, endX, endY))
 								{
 									direction = getDirection(x, y, endX, endY);
 									if (direction != -1)
@@ -985,7 +1321,7 @@ bool Player::checkOvertake(string player)
 						{
 							if (tempBoard[endY][endX].getPlayer() == "C")
 							{
-								if (boardObj->checkNumSpaces(x, y, endX, endY))
+								if (checkNumSpaces(x, y, endX, endY))
 								{
 									direction = getDirection(x, y, endX, endY);
 									if (direction != -1)
@@ -1005,6 +1341,30 @@ bool Player::checkOvertake(string player)
 	return false;
 }
 
+
+/* *********************************************************************
+Function Name: executeBestMove
+Purpose: Fourth pass of AI algorithm; Blitz tactic
+	Find a piece that can move closest to the Human's keypiece
+Parameters: None
+Return Value: return true if piece has been moved to the best location available
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	direction, int signifying the direction the piece will travel
+	temp, score, int that holds the best score for all the moves available
+	KeyPieceLocation, vector<int> the vector holding the coords of the keypiece
+	keyX, keyY, ints storing the coords for the opponents keypiece
+	startX, startY, finalX, finalY, ints containing the start and end coordinates
+Algorithm:
+1) Loop through board looking for Computer die
+2) Loop through board again checking every possible end location for the die
+3) Check direction and if path is clear for an endpoint
+4) Calculate the distance of that valid endpoint to the keypiece, save to tempScore
+5) If the tempScore < score this move will be closer to the keypiece
+6) Display move with the lowest score
+7) Execute the move with the lowest score
+Assistance Received: none
+********************************************************************* */
 bool Player::executeBestMove()
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -1029,7 +1389,7 @@ bool Player::executeBestMove()
 					{
 						// If end point is proper number of spaces
 						// Check path and get direction and calculate score
-						if (boardObj->checkNumSpaces(x, y, endX, endY))
+						if (checkNumSpaces(x, y, endX, endY))
 						{
 							tempDirection = getDirection(x, y, endX, endY);
 							// If getDirection != -1 path is clear
@@ -1066,6 +1426,21 @@ bool Player::executeBestMove()
 	}
 }
 
+/* *********************************************************************
+Function Name: help
+Purpose: This function calls all the AI components as a human player
+			to generate the help prompts
+Parameters: None
+Return Value: void
+Local Variables: None
+Algorithm:
+1) Check if a human die can attack the computer's keypiece
+2) Check if a human die can defend the keypiece
+3) Check if a human die can defend the keyspace
+4) Check is a human die can overtake a computer die
+5) If none of these scenarios are true, prompt the player to move any piece they choose
+Assistance Received: none
+********************************************************************* */
 void Player::help()
 {
 	// Check if Human has winning move
@@ -1086,6 +1461,22 @@ void Player::help()
 
 }
 
+/* *********************************************************************
+Function Name: displayHelp
+Purpose: Displays the help results for the human player
+Parameters:
+	startX, startY, endX, endY, ints containing the start and end coordinates
+	direction, int signifying the direction the piece will travel
+	moveType, string signifying the type of move to display
+Return Value: void
+Local Variables:
+	tempBoard, vector<vector<Die>> which is filled with the current state of the board
+	message, a string containing message to display
+Algorithm:
+1) Depending on the moveType set the message to explain what the move will accomplish
+2) Depending on the direction display the start die, the location, end location, and which direction to move first
+Assistance Received: none
+********************************************************************* */
 void Player::displayHelp(int startX, int startY, int endX, int endY, int direction, string moveType)
 {
 	vector<vector<Die>> tempBoard = boardObj->GetBoard();
@@ -1114,7 +1505,6 @@ void Player::displayHelp(int startX, int startY, int endX, int endY, int directi
 
 	}
 
-	// Display Help if a Human Piece can attack KeyPiece
 
 	if (direction == 0)
 	{
