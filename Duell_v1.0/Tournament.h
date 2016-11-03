@@ -6,23 +6,27 @@
 //************************************************************
 
 #include "stdafx.h"
-#include "Player.h"
-#pragma once
+#include "Game.h"
 
-class Human : public Player
+
+
+#pragma once
+class Tournament
 {
 public:
-	Human();
-	~Human();
+	Tournament();
+	~Tournament();
 	// Mutator
-	void setCoordinates(int, int, int, int, int);
-	// Accessors
-	int getStartXCoordinate() const { return startX; }
-	int getStartYCoordinate() const { return startY; }
+	void setBoard();
 
-	void getCoordinates();
-	Board * play();
+	void displayWinner();
+	void startTournament();
+	bool playAgain();
+	void loadGame();
+	void startFromLoad(string);
+	
 private:
-	int startX, startY, endX, endY, direction;
+	Board * boardObj;
+	Game * gameObj;
 };
 

@@ -1,15 +1,29 @@
-/*
-* Driver for the game
-*/
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
+
 #include "stdafx.h"     // Contains the pre-compiled headers.
 #include "Game.h"
+#include "Tournament.h"
 #include <stdio.h>
 
-
+/* *********************************************************************
+Function Name: main
+Purpose: Start the program and ask user for start option
+Parameters: None
+Algorithm:
+1) Ask user to select game start option
+2) Create a tournament object and start the game
+Assistance Received: none
+********************************************************************* */
 int main(int argc, char *argv[])
 {
 	// Switch Statement Choice
-	int choice;
+	char choice;
 
 	cout << " +********************************************************************************************************+ " << endl;
 	cout << " |  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   " << " |" << endl;
@@ -27,7 +41,7 @@ int main(int argc, char *argv[])
 	cout << " |       Author: Ted Johansmeyer                                                                          |" << endl;
 	cout << " |       Project: C++ Duell                                                                               |" << endl;
 	cout << " |       Class: CMPS 366 Organization of Programming Languages                                            |" << endl;
-	cout << " |       Date: *** Enter Submission Date                                                                  |" << endl;
+	cout << " |       Date: October 21st 2016                                                                          |" << endl;
 	cout << " |                                                                                                        |" << endl;
 	cout << " +********************************************************************************************************+ " << endl;
 	cout << endl;
@@ -37,53 +51,43 @@ int main(int argc, char *argv[])
 		cout << "          |                Welcome to Duell!                |" << endl;
 		cout << "          |             Please Select an Option             |" << endl;
 		cout << "          |                                                 |" << endl;
-		cout << "          |     1. Start a New Game                         |" << endl;
-		cout << "          |     2. Start a New Tournament                   |" << endl;
-		cout << "          |     3. Load a Saved Game                        |" << endl;
-		cout << "          |     4. Quit                                     |" << endl;
+		cout << "          |     1. Start a New Tournament                   |" << endl;
+		cout << "          |     2. Load a Saved Game                        |" << endl;
+		cout << "          |     3. Quit                                     |" << endl;
 		cout << "          +=================================================+" << endl;
 		cout << endl;
 		cout << "           Selection: ";
 		cin >> choice;
+		cout << endl << endl << endl << endl;
 
 		switch (choice)
 		{
-		case 1 :
+		case '1' :
 		{
-			// Start a new game
-			Game * game = new Game();
-			game->startGame();
+			// Start a new Tournament
+			Tournament * tournament = new Tournament();
+			tournament->startTournament();
 			break;
 		}
-		case 2 :
-			// Start a new Tournament
-			break;
-		case 3 :
+		case '2' :
+		{
 			// Load a Saved Game
-		case 4 :
+			Tournament * tournament = new Tournament();
+			tournament->loadGame();
+			break;
+		}
+		case '3' :
+		{
 			// Quit Game
 			break;
+		}
 		default :
 			// Return to top of loop on invalid input
+			cout << "Incorrect input!" << endl;
+			cout << "Please try again" << endl << endl;
 			break;
 		}
-	} while (choice != 4);
-
-
-	//Board b;
-	//boardView v;
-	//vector<vector<Die>> gameboard = b.GetBoard();
-	//v.ViewBoard(gameboard);
-	//cout << "Choose X Coordinate of Die to move: ";
-	//cin >> x;
-	//cout << "Choose Y Coordinate of Die to move: ";
-	//cin >> y;
-	//gameboard = b.movePiece(x, y, gameboard);
-	//v.ViewBoard(gameboard);
-
-
-	
-
+	} while (choice != '3');
 
 
 	cout << endl;

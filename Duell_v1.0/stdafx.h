@@ -20,6 +20,9 @@
 #include <string>
 #include <windows.h>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 
 
 using namespace std;

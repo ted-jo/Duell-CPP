@@ -1,3 +1,10 @@
+//************************************************************
+//* Name:  Ted Johansmeyer                                   *
+//* Project : C++ Duell                                      *
+//* Class : CMPS 366 Organization of Programming Languages   *
+//* Date : October 21st 2016                                 *
+//************************************************************
+
 #include "boardView.h"
 #include "stdafx.h"
 
@@ -11,6 +18,17 @@ boardView::~boardView()
 {
 }
 
+/* *********************************************************************
+Function Name: ViewBoard
+Purpose: Display the board
+Parameters: vector<vector<die>> gameboard by reference
+Return Value: void
+Algorithm:
+1) Loop through gameboard 
+2) Print each index
+3) Print the x and y indexes
+Assistance Received: none
+********************************************************************* */
 void boardView::ViewBoard(vector<vector<Die>>& gameboard)
 {
 	int rowIndex = 8; // Index for y coordinates
